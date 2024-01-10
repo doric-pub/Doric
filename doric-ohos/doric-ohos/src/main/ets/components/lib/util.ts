@@ -28,3 +28,12 @@ export function gravityToAlignment(gravity: number) {
     }
   }
 }
+
+const componentToHex = (c) => {
+  const hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+
+export const argbToHex = (a, r, g, b) => {
+  return "#" + componentToHex(a) + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}

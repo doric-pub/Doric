@@ -10,6 +10,7 @@ import {
 } from 'doric'
 import Animator, { AnimatorOptions, AnimatorResult } from '@ohos.animator'
 import { DoricContext, getGlobalObject, ViewStackProcessor } from './sandbox'
+import { argbToHex } from './util'
 
 const GradientDirection = getGlobalObject("GradientDirection")
 const Visibility = getGlobalObject("Visibility")
@@ -114,64 +115,71 @@ export abstract class DoricViewNode<T extends View> {
     }
 
     // backgroundColor
-    if (v.backgroundColor instanceof DoricColor) {
-      /// pure color
-      if (v.backgroundColor !== DoricColor.TRANSPARENT) {
-        this.TAG.backgroundColor(v.backgroundColor.toModel())
+    if (v.backgroundColor) {
+      if (this.isInAnimator()) {
+        const backgroundColor = JSON.parse(getInspectorByKey(v.viewId)).$attrs.backgroundColor
+        this.addAnimator("backgroundColor", DoricColor.parse(backgroundColor), (v.backgroundColor as DoricColor))
       } else {
-        this.TAG.backgroundColor(Color.Transparent)
-      }
-    } else if (v.backgroundColor instanceof Object) {
-      /// gradient color
-      const gradientColor = v.backgroundColor as GradientColor
+        if (v.backgroundColor instanceof DoricColor) {
+          /// pure color
+          if (v.backgroundColor !== DoricColor.TRANSPARENT) {
+            this.TAG.backgroundColor(v.backgroundColor.toModel())
+          } else {
+            this.TAG.backgroundColor(Color.Transparent)
+          }
+        } else if (v.backgroundColor instanceof Object) {
+          /// gradient color
+          const gradientColor = v.backgroundColor as GradientColor
 
-      let direction
-      switch (gradientColor.orientation) {
-        case GradientOrientation.TOP_BOTTOM:
-          direction = GradientDirection.Bottom
-          break
-        case GradientOrientation.TR_BL:
-          direction = GradientDirection.LeftBottom
-          break
-        case GradientOrientation.RIGHT_LEFT:
-          direction = GradientDirection.Left
-          break
-        case GradientOrientation.BR_TL:
-          direction = GradientDirection.LeftTop
-          break
-        case GradientOrientation.BOTTOM_TOP:
-          direction = GradientDirection.Top
-          break
-        case GradientOrientation.BL_TR:
-          direction = GradientDirection.RightTop
-          break
-        case GradientOrientation.LEFT_RIGHT:
-          direction = GradientDirection.Right
-          break
-        case GradientOrientation.TL_BR:
-          direction = GradientDirection.RightBottom
-          break
-      }
+          let direction
+          switch (gradientColor.orientation) {
+            case GradientOrientation.TOP_BOTTOM:
+              direction = GradientDirection.Bottom
+              break
+            case GradientOrientation.TR_BL:
+              direction = GradientDirection.LeftBottom
+              break
+            case GradientOrientation.RIGHT_LEFT:
+              direction = GradientDirection.Left
+              break
+            case GradientOrientation.BR_TL:
+              direction = GradientDirection.LeftTop
+              break
+            case GradientOrientation.BOTTOM_TOP:
+              direction = GradientDirection.Top
+              break
+            case GradientOrientation.BL_TR:
+              direction = GradientDirection.RightTop
+              break
+            case GradientOrientation.LEFT_RIGHT:
+              direction = GradientDirection.Right
+              break
+            case GradientOrientation.TL_BR:
+              direction = GradientDirection.RightBottom
+              break
+          }
 
-      const colors = []
-      if (gradientColor.start && gradientColor.end) {
-        colors.push([gradientColor.start, 0])
-        colors.push([gradientColor.end, 1])
-      } else if (gradientColor.colors) {
-        if (gradientColor.locations && gradientColor.colors.length === gradientColor.locations.length) {
-          gradientColor.colors.forEach((color, index) => {
-            colors.push([color, gradientColor.locations[index]])
-          })
-        } else {
-          gradientColor.colors.forEach((color, index) => {
-            colors.push([color, 0 + 1 / (gradientColor.colors.length - 1) * index])
+          const colors = []
+          if (gradientColor.start && gradientColor.end) {
+            colors.push([gradientColor.start, 0])
+            colors.push([gradientColor.end, 1])
+          } else if (gradientColor.colors) {
+            if (gradientColor.locations && gradientColor.colors.length === gradientColor.locations.length) {
+              gradientColor.colors.forEach((color, index) => {
+                colors.push([color, gradientColor.locations[index]])
+              })
+            } else {
+              gradientColor.colors.forEach((color, index) => {
+                colors.push([color, 0 + 1 / (gradientColor.colors.length - 1) * index])
+              })
+            }
+          }
+          this.TAG.linearGradient({
+            direction: direction,
+            colors: colors
           })
         }
       }
-      this.TAG.linearGradient({
-        direction: direction,
-        colors: colors
-      })
     }
 
     // alpha
@@ -737,7 +745,7 @@ export abstract class DoricViewNode<T extends View> {
     return this.context.getAnimatorSet() != null
   }
 
-  public addAnimator(key: string, fromValue: number, toValue: number) {
+  public addAnimator(key: string, fromValue: number | DoricColor, toValue: number | DoricColor) {
     if (this.context.getAnimatorSet() == null) {
       return
     }
@@ -754,23 +762,47 @@ export abstract class DoricViewNode<T extends View> {
 
     const animator = Animator.create(options)
     animator.onframe = (progress: number) => {
-      const frameValue = fromValue + progress * (toValue - fromValue)
-      switch (key) {
-        case "width":
-          this.view.width = frameValue
-          break
-        case "height":
-          this.view.height = frameValue
-          break
-        case "x":
-          this.view.x = frameValue
-          break
-        case "y":
-          this.view.y = frameValue
-          break
-        case "corners":
-          this.view.corners = frameValue
-          break
+      if (key !== "backgroundColor") {
+        const frameValue = (fromValue as number) + progress * ((toValue as number) - (fromValue as number))
+        switch (key) {
+          case "width":
+            this.view.width = frameValue
+            break
+          case "height":
+            this.view.height = frameValue
+            break
+          case "x":
+            this.view.x = frameValue
+            break
+          case "y":
+            this.view.y = frameValue
+            break
+          case "corners":
+            this.view.corners = frameValue
+            break
+        }
+      } else {
+        let from = (fromValue as DoricColor)._value
+        from >>>= 0
+        const fromB = from & 0xFF,
+          fromG = (from & 0xFF00) >>> 8,
+          fromR = (from & 0xFF0000) >>> 16,
+          fromA = ((from & 0xFF000000) >>> 24)
+
+        let to = (toValue as DoricColor)._value
+        to >>>= 0
+        const toB = to & 0xFF,
+          toG = (to & 0xFF00) >>> 8,
+          toR = (to & 0xFF0000) >>> 16,
+          toA = ((to & 0xFF000000) >>> 24)
+
+        const frameA = Math.round(fromA + progress * (toA - fromA))
+        const frameR = Math.round(fromR + progress * (toR - fromR))
+        const frameG = Math.round(fromG + progress * (toG - fromG))
+        const frameB = Math.round(fromB + progress * (toB - fromB))
+
+        const frameColor = argbToHex(frameA, frameR, frameG, frameB)
+        this.view.backgroundColor = DoricColor.parse(frameColor)
       }
     }
     animator.oncancel = () => {
@@ -780,6 +812,5 @@ export abstract class DoricViewNode<T extends View> {
     }
     animator.play()
     this.context.getAnimatorSet().animatorSet.push(animator)
-
   }
 }

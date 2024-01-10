@@ -80,20 +80,31 @@ export abstract class DoricViewNode<T extends View> {
 
     // x
     let marginLeft
-    if (v.x) {
+    if (v.x !== undefined) {
       marginLeft = v.x
     }
 
     // y
     let marginTop
-    if (v.y) {
+    if (v.y !== undefined) {
       marginTop = v.y
     }
 
-    this.TAG.margin({
-      left: marginLeft ?? 0,
-      top: marginTop ?? 0,
-    })
+    if (this.isInAnimator()) {
+      if (v.x !== undefined) {
+        const x = parseInt(JSON.parse(JSON.parse(getInspectorByKey(v.viewId)).$attrs.margin).left.replace("vp", ""))
+        this.addAnimator("x", x, v.x)
+      }
+      if (v.y !== undefined) {
+        const y = parseInt(JSON.parse(JSON.parse(getInspectorByKey(v.viewId)).$attrs.margin).top.replace("vp", ""))
+        this.addAnimator("y", y, v.y)
+      }
+    } else {
+      this.TAG.margin({
+        left: marginLeft ?? 0,
+        top: marginTop ?? 0,
+      })
+    }
 
     // onClick
     if (v.onClick) {
@@ -433,8 +444,10 @@ export abstract class DoricViewNode<T extends View> {
     const heightSpec = v.layoutConfig?.heightSpec?? LayoutSpec.JUST
 
     if (this.isInAnimator()) {
-      const width = parseInt(JSON.parse(getInspectorByKey(v.viewId)).$attrs.width.replace("vp", ""))
-      this.addAnimator("width", width, v.width)
+      if (v.width) {
+        const width = parseInt(JSON.parse(getInspectorByKey(v.viewId)).$attrs.width.replace("vp", ""))
+        this.addAnimator("width", width, v.width)
+      }
     } else {
       switch (widthSpec) {
         case LayoutSpec.FIT:
@@ -450,8 +463,10 @@ export abstract class DoricViewNode<T extends View> {
     }
 
     if (this.isInAnimator()) {
-      const height = parseInt(JSON.parse(getInspectorByKey(v.viewId)).$attrs.height.replace("vp", ""))
-      this.addAnimator("height", height, v.height)
+      if (v.height) {
+        const height = parseInt(JSON.parse(getInspectorByKey(v.viewId)).$attrs.height.replace("vp", ""))
+        this.addAnimator("height", height, v.height)
+      }
     } else {
       switch (heightSpec) {
         case LayoutSpec.MOST:
@@ -741,6 +756,12 @@ export abstract class DoricViewNode<T extends View> {
           break
         case "height":
           this.view.height = frameValue
+          break
+        case "x":
+          this.view.x = frameValue
+          break
+        case "y":
+          this.view.y = frameValue
           break
       }
     }

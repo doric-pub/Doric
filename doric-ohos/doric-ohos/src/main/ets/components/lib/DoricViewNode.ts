@@ -237,44 +237,75 @@ export abstract class DoricViewNode<T extends View> {
 
     // scaleX & scaleY
     if (v.scaleY || v.scaleX) {
-      const scaleOptions = {} as any
-      if (v.scaleX) {
-        scaleOptions.x = v.scaleX
+      if (this.isInAnimator()) {
+        if (v.scaleX !== undefined) {
+          const scaleX = JSON.parse(getInspectorByKey(v.viewId)).$attrs.scale.x ?? 1
+          this.addAnimator("scaleX", scaleX, v.scaleX)
+        }
+        if (v.scaleY !== undefined) {
+          const scaleY = JSON.parse(getInspectorByKey(v.viewId)).$attrs.scale.y ?? 1
+          this.addAnimator("scaleY", scaleY, v.scaleY)
+        }
+      } else {
+        const scaleOptions = {} as any
+        if (v.scaleX) {
+          scaleOptions.x = v.scaleX
+        }
+        if (v.scaleY) {
+          scaleOptions.y = v.scaleY
+        }
+        this.TAG.scale(scaleOptions)
       }
-      if (v.scaleY) {
-        scaleOptions.y = v.scaleY
-      }
-      this.TAG.scale(scaleOptions)
+
+
     }
 
     // rotation
     if (v.rotation) {
-      this.TAG.rotate({
-        x: 0,
-        y: 0,
-        z: 1,
-        angle: v.rotation * 180
-      })
+      if (this.isInAnimator()) {
+        const rotation = (JSON.parse(getInspectorByKey(v.viewId)).$attrs.rotate.angle ?? 0) / 180
+        this.addAnimator("rotation", rotation, v.rotation)
+      } else {
+        this.TAG.rotate({
+          x: 0,
+          y: 0,
+          z: 1,
+          angle: v.rotation * 180
+        })
+      }
+
     }
 
     // rotationX
     if (v.rotationX) {
-      this.TAG.rotate({
-        x: 1,
-        y: 0,
-        z: 0,
-        angle: v.rotationX * 180
-      })
+      if (this.isInAnimator()) {
+        const rotationX = (JSON.parse(getInspectorByKey(v.viewId)).$attrs.rotate.angle ?? 0) / 180
+        this.addAnimator("rotationX", rotationX, v.rotationX)
+      }
+      {
+        this.TAG.rotate({
+          x: 1,
+          y: 0,
+          z: 0,
+          angle: v.rotationX * 180
+        })
+      }
+
     }
 
     // rotationX
     if (v.rotationY) {
-      this.TAG.rotate({
-        x: 0,
-        y: 1,
-        z: 0,
-        angle: v.rotationY * 180
-      })
+      if (this.isInAnimator()) {
+        const rotationY = (JSON.parse(getInspectorByKey(v.viewId)).$attrs.rotate.angle ?? 0) / 180
+        this.addAnimator("rotationY", rotationY, v.rotationY)
+      } else {
+        this.TAG.rotate({
+          x: 0,
+          y: 1,
+          z: 0,
+          angle: v.rotationY * 180
+        })
+      }
     }
 
     // hidden
@@ -779,6 +810,21 @@ export abstract class DoricViewNode<T extends View> {
             break
           case "corners":
             this.view.corners = frameValue
+            break
+          case "rotation":
+            this.view.rotation = frameValue
+            break
+          case "rotationX":
+            this.view.rotationX = frameValue
+            break
+          case "rotationY":
+            this.view.rotationY = frameValue
+            break
+          case "scaleX":
+            this.view.scaleX = frameValue
+            break
+          case "scaleY":
+            this.view.scaleY = frameValue
             break
         }
       } else {

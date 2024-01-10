@@ -22,6 +22,7 @@ import { HorizontalListItemNode } from '../node/HorizontalListItemNode'
 import { NetworkPlugin } from '../plugin/NetworkPlugin'
 import { NotchPlugin } from '../plugin/NotchPlugin'
 import { NestedSliderNode } from '../node/NestedSliderNode'
+import { AnimatePlugin } from '../plugin/AnimatePlugin'
 
 function injectGlobalFunction() {
   globalThis.nativeLog = (type: string, log: any) => {
@@ -50,6 +51,7 @@ export function initDoric() {
   registerDoricPlugin("modal", ModalPlugin)
   registerDoricPlugin("network", NetworkPlugin)
   registerDoricPlugin("notch", NotchPlugin)
+  registerDoricPlugin("animate", AnimatePlugin)
 
   registerDoricViewNode("Root", RootNode)
   registerDoricViewNode("Stack", StackNode)

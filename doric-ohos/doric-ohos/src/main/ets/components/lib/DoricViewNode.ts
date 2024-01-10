@@ -431,30 +431,40 @@ export abstract class DoricViewNode<T extends View> {
 
     const widthSpec = v.layoutConfig?.widthSpec?? LayoutSpec.JUST
     const heightSpec = v.layoutConfig?.heightSpec?? LayoutSpec.JUST
-    switch (widthSpec) {
-      case LayoutSpec.FIT:
-        break
-      case LayoutSpec.MOST:
-        this.TAG.width("100%")
-        break
-      case LayoutSpec.JUST:
-      default:
-        this.TAG.width(v.width)
-        break
+
+    if (this.isInAnimator()) {
+      const width = parseInt(JSON.parse(getInspectorByKey(v.viewId)).$attrs.width.replace("vp", ""))
+      this.addAnimator("width", width, v.width)
+    } else {
+      switch (widthSpec) {
+        case LayoutSpec.FIT:
+          break
+        case LayoutSpec.MOST:
+          this.TAG.width("100%")
+          break
+        case LayoutSpec.JUST:
+        default:
+          this.TAG.width(v.width)
+          break
+      }
     }
 
-    switch (heightSpec) {
-      case LayoutSpec.MOST:
-        this.TAG.height("100%")
-        break
-      case LayoutSpec.FIT:
-        break
-      case LayoutSpec.JUST:
-      default:
-        this.TAG.height(v.height)
-        break
+    if (this.isInAnimator()) {
+      const height = parseInt(JSON.parse(getInspectorByKey(v.viewId)).$attrs.height.replace("vp", ""))
+      this.addAnimator("height", height, v.height)
+    } else {
+      switch (heightSpec) {
+        case LayoutSpec.MOST:
+          this.TAG.height("100%")
+          break
+        case LayoutSpec.FIT:
+          break
+        case LayoutSpec.JUST:
+        default:
+          this.TAG.height(v.height)
+          break
+      }
     }
-
   }
 
   private getFlexTypedValue(value: FlexValue) {
@@ -499,7 +509,7 @@ export abstract class DoricViewNode<T extends View> {
       })
     } else {
       this.parseSingleAnimator(props, animatorSet)
-      
+
       this.context.animators.set(props.id, animatorSet)
     }
   }
@@ -699,7 +709,48 @@ export abstract class DoricViewNode<T extends View> {
       case "rotation":
         return this.view.rotation
       default:
-        return 0;
+        return 0
     }
+  }
+
+  private isInAnimator() {
+    return this.context.getAnimatorSet() != null
+  }
+
+  public addAnimator(key: string, fromValue: number, toValue: number) {
+    if (this.context.getAnimatorSet() == null) {
+      return
+    }
+    let options: AnimatorOptions = {
+      duration: this.context.getAnimatorSet().duration,
+      easing: "ease",
+      delay: 0,
+      fill: "forwards",
+      direction: "normal",
+      iterations: 1,
+      begin: 0.0,
+      end: 1.0
+    }
+
+    const animator = Animator.create(options)
+    animator.onframe = (progress: number) => {
+      const frameValue = fromValue + progress * (toValue - fromValue)
+      switch (key) {
+        case "width":
+          this.view.width = frameValue
+          break
+        case "height":
+          this.view.height = frameValue
+          break
+      }
+    }
+    animator.oncancel = () => {
+    }
+    animator.onfinish = () => {
+      animator.cancel()
+    }
+    animator.play()
+    this.context.getAnimatorSet().animatorSet.push(animator)
+
   }
 }

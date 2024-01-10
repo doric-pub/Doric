@@ -103,6 +103,11 @@ export class DoricContext implements BridgeContext {
 
   animators: Map<string, AnimatorResult[]>
 
+  private animatorSet: {
+    duration: number,
+    animatorSet: AnimatorResult[]
+  } = null
+
   constructor(viewPU: ViewPU, entity: any, id?: string) {
     this.id = id ?? uniqueId("Context")
     this.viewPU = viewPU
@@ -196,6 +201,17 @@ export class DoricContext implements BridgeContext {
         return this.popoverRootNode.childNodes.get(id);
       }
     }
+  }
+
+  setAnimatorSet(animatorSet: {
+    duration: number,
+    animatorSet: []
+  }) {
+    this.animatorSet = animatorSet
+  }
+
+  getAnimatorSet() {
+    return this.animatorSet
   }
 }
 

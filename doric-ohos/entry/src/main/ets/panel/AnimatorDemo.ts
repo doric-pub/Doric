@@ -22,7 +22,7 @@ export class AnimatorDemo extends Panel {
       height: 100
     })
     view.onClick = () => {
-      modal(context).toast('Clicked')
+      modal(this.context).toast('Clicked')
     }
     //const view = box(3)
     let idx = 0
@@ -34,7 +34,7 @@ export class AnimatorDemo extends Panel {
         hlayout(
           [thisLabel('Reset').apply({
             onClick: () => {
-              animate(context)({
+              animate(this.context)({
                 animations: () => {
                   view.width = view.height = 20
                   view.x = view.y = 0
@@ -51,9 +51,9 @@ export class AnimatorDemo extends Panel {
                 },
                 duration: 1500,
               }).then(() => {
-                modal(context).toast('Fininshed')
+                modal(this.context).toast('Fininshed')
               }).catch(e => {
-                modal(context).toast(`${e}`)
+                modal(this.context).toast(`${e}`)
               })
             }
           }),],
@@ -63,7 +63,7 @@ export class AnimatorDemo extends Panel {
           [
           thisLabel('X').apply({
             onClick: () => {
-              animate(context)({
+              animate(this.context)({
                 animations: () => {
                   view.x = view.x || 0
                   view.x += 100
@@ -75,7 +75,7 @@ export class AnimatorDemo extends Panel {
           }),
           thisLabel('Y').apply({
             onClick: () => {
-              animate(context)({
+              animate(this.context)({
                 animations: () => {
                   view.y = view.y || 0
                   view.y += 100
@@ -87,7 +87,7 @@ export class AnimatorDemo extends Panel {
           }),
           thisLabel('Width').apply({
             onClick: () => {
-              animate(context)({
+              animate(this.context)({
                 animations: () => {
                   view.width += 100
                 },
@@ -97,7 +97,7 @@ export class AnimatorDemo extends Panel {
           }),
           thisLabel('Height').apply({
             onClick: () => {
-              animate(context)({
+              animate(this.context)({
                 animations: () => {
                   view.height += 100
                 },
@@ -112,7 +112,7 @@ export class AnimatorDemo extends Panel {
           [
           thisLabel('BgColor').apply({
             onClick: () => {
-              animate(context)({
+              animate(this.context)({
                 animations: () => {
                   view.backgroundColor = colors[(idx++) % colors.length]
                 },
@@ -122,7 +122,7 @@ export class AnimatorDemo extends Panel {
           }),
           thisLabel('Rotation').apply({
             onClick: () => {
-              animate(context)({
+              animate(this.context)({
                 animations: () => {
                   if (view.rotation) {
                     view.rotation += 0.25
@@ -136,7 +136,7 @@ export class AnimatorDemo extends Panel {
           }),
           thisLabel('RotationX').apply({
             onClick: () => {
-              animate(context)({
+              animate(this.context)({
                 animations: () => {
                   if (view.rotationX) {
                     view.rotationX += 0.25
@@ -150,7 +150,7 @@ export class AnimatorDemo extends Panel {
           }),
           thisLabel('RotationY').apply({
             onClick: () => {
-              animate(context)({
+              animate(this.context)({
                 animations: () => {
                   if (view.rotationY) {
                     view.rotationY += 0.25
@@ -164,7 +164,7 @@ export class AnimatorDemo extends Panel {
           }),
           thisLabel('Corner').apply({
             onClick: () => {
-              animate(context)({
+              animate(this.context)({
                 animations: () => {
                   if (typeof view.corners === 'number') {
                     view.corners += 10
@@ -183,7 +183,7 @@ export class AnimatorDemo extends Panel {
         hlayout([
         thisLabel('scaleX').apply({
           onClick: () => {
-            animate(context)({
+            animate(this.context)({
               animations: () => {
                 if (view.scaleX) {
                   view.scaleX += 0.1
@@ -197,7 +197,7 @@ export class AnimatorDemo extends Panel {
         }),
         thisLabel('scaleY').apply({
           onClick: () => {
-            animate(context)({
+            animate(this.context)({
               animations: () => {
                 if (view.scaleY) {
                   view.scaleY += 0.1

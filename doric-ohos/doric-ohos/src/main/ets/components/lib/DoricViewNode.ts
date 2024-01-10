@@ -187,21 +187,26 @@ export abstract class DoricViewNode<T extends View> {
 
     // corners
     if (v.corners) {
-      if (typeof v.corners === "number") {
-        this.TAG.borderRadius(v.corners)
-      } else if (typeof v.corners === "object") {
-        const corners = v.corners as {
-          leftTop?: number
-          rightTop?: number
-          leftBottom?: number
-          rightBottom?: number
+      if (this.isInAnimator()) {
+        const corners = parseInt(JSON.parse(getInspectorByKey(v.viewId)).$attrs.borderRadius.replace("vp", ""))
+        this.addAnimator("corners", corners, v.corners as number)
+      } else {
+        if (typeof v.corners === "number") {
+          this.TAG.borderRadius(v.corners)
+        } else if (typeof v.corners === "object") {
+          const corners = v.corners as {
+            leftTop?: number
+            rightTop?: number
+            leftBottom?: number
+            rightBottom?: number
+          }
+          this.TAG.borderRadius({
+            topLeft: corners.leftTop?? 0,
+            topRight: corners.rightTop?? 0,
+            bottomLeft: corners.leftBottom?? 0,
+            bottomRight: corners.rightBottom?? 0,
+          })
         }
-        this.TAG.borderRadius({
-          topLeft: corners.leftTop?? 0,
-          topRight: corners.rightTop?? 0,
-          bottomLeft: corners.leftBottom?? 0,
-          bottomRight: corners.rightBottom?? 0,
-        })
       }
     }
 
@@ -762,6 +767,9 @@ export abstract class DoricViewNode<T extends View> {
           break
         case "y":
           this.view.y = frameValue
+          break
+        case "corners":
+          this.view.corners = frameValue
           break
       }
     }

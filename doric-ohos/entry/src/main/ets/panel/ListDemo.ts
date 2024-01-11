@@ -131,9 +131,9 @@ class ListVM extends ViewModel<ListModel, ListVH> {
         })
       },
       onScrollEnd: async () => {
-        const ret = await vh.list.findCompletelyVisibleItems(context)
+        const ret = await vh.list.findCompletelyVisibleItems(this.context)
         loge('completelyVisible Items is:', ret)
-        const ret2 = await vh.list.findVisibleItems(context)
+        const ret2 = await vh.list.findVisibleItems(this.context)
         loge('visible Items is:', ret2)
       },
       loadMoreView: listItem(text({

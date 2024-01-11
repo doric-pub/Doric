@@ -3,9 +3,11 @@ import { BasicDataSource } from '../lib/BasicDataSource'
 import { createDoricViewNode } from '../lib/Registry'
 import { getGlobalObject } from '../lib/sandbox'
 import { SuperNode } from '../lib/SuperNode'
+import { parseInspectorRect } from '../lib/util'
 
 const List = getGlobalObject("List")
 const LazyForEach = getGlobalObject("LazyForEach")
+const Scroller = getGlobalObject("Scroller")
 
 const LOAD_MORE_DATA = "loadMore"
 
@@ -55,6 +57,8 @@ class ViewDataSource extends BasicDataSource<string> {
 
 export class ListNode extends SuperNode<DoricList> {
   TAG = List
+
+  private scroller = new Scroller()
 
   private dataSource: ViewDataSource = new ViewDataSource()
   private lazyForEachElmtId?: string
@@ -121,7 +125,9 @@ export class ListNode extends SuperNode<DoricList> {
   }
 
   blend(v: DoricList) {
-    List.create()
+    List.create({
+      scroller: this.scroller
+    })
 
     // itemCount
     if (v.itemCount) {
@@ -154,6 +160,16 @@ export class ListNode extends SuperNode<DoricList> {
       this.dataSource.loadMore = v.loadMore
     }
 
+    if (v.onScrollEnd) {
+      List.onScrollStop(() => {
+        const currentOffset = this.scroller.currentOffset()
+        v.onScrollEnd({
+          x: currentOffset.xOffset,
+          y: currentOffset.yOffset
+        })
+      })
+    }
+
     // commonConfig
     this.commonConfig(v);
   }
@@ -174,12 +190,51 @@ export class ListNode extends SuperNode<DoricList> {
   }
 
   private reload() {
-    ((this.view as any).cachedViews as Map<string, View>).clear()
-    this.dataSourceReload()
+    return new Promise((resolve, reject) => {
+      ((this.view as any).cachedViews as Map<string, View>).clear()
+      this.dataSourceReload()
+
+      resolve("")
+    })
   }
 
   private dataSourceReload() {
     this.reloadVersion++
     this.dataSource.reloadData()
+  }
+
+  private findCompletelyVisibleItems() {
+    return new Promise((resolve, reject) => {
+      const completelyVisibleItems: number[] = []
+
+      const listRect = parseInspectorRect(JSON.parse(getInspectorByKey(this.view.viewId)).$rect)
+
+      this.view.allSubviews().forEach((subview, index) => {
+        const inspector = getInspectorByKey(subview.viewId)
+
+        if (inspector !== "") {
+          const listItemRect = parseInspectorRect(JSON.parse(inspector).$rect)
+          if (listItemRect.top >= listRect.top && listItemRect.bottom <= listRect.bottom) {
+            completelyVisibleItems.push(index)
+          }
+        }
+      })
+      resolve(completelyVisibleItems)
+    })
+  }
+
+  private findVisibleItems() {
+    return new Promise((resolve, reject) => {
+      const visibleItems: number[] = []
+
+      this.view.allSubviews().forEach((subview, index) => {
+        const inspector = getInspectorByKey(subview.viewId)
+
+        if (inspector !== "") {
+          visibleItems.push(index)
+        }
+      })
+      resolve(visibleItems)
+    })
   }
 }

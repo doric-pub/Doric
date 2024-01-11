@@ -37,3 +37,23 @@ const componentToHex = (c) => {
 export const argbToHex = (a, r, g, b) => {
   return "#" + componentToHex(a) + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
+
+export function parseInspectorRect(rect: string) {
+  const leftTopPart = rect.substring(rect.indexOf("[") + 1, rect.indexOf("]"))
+  const rightBottomPart = rect.substring(rect.indexOf("]") + 2, rect.length - 1)
+
+  const leftTopArray = leftTopPart.split(",")
+  const left = parseFloat(leftTopArray[0])
+  const top = parseFloat(leftTopArray[1])
+
+  const rightBottomArray = rightBottomPart.split(",")
+  const right = parseFloat(rightBottomArray[0])
+  const bottom = parseFloat(rightBottomArray[1])
+
+  return {
+    left: left,
+    top: top,
+    right: right,
+    bottom: bottom
+  }
+}

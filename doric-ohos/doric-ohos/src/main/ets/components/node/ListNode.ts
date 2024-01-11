@@ -177,6 +177,14 @@ export class ListNode extends SuperNode<DoricList> {
         })
       })
     }
+
+    if (v.scrolledPosition) {
+      this.scroller.scrollTo({
+        xOffset: 0,
+        yOffset: v.scrolledPosition
+      })
+    }
+
     // commonConfig
     this.commonConfig(v);
   }

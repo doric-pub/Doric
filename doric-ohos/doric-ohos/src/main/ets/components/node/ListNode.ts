@@ -170,6 +170,13 @@ export class ListNode extends SuperNode<DoricList> {
       })
     }
 
+    if (v.onScroll) {
+      List.onScroll((scrollOffset, scrollState) => {
+        v.onScroll({
+          x: 0, y: scrollOffset
+        })
+      })
+    }
     // commonConfig
     this.commonConfig(v);
   }

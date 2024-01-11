@@ -185,6 +185,10 @@ export class ListNode extends SuperNode<DoricList> {
       })
     }
 
+    if (v.scrollable) {
+      List.enabled(v.scrollable)
+    }
+
     // commonConfig
     this.commonConfig(v);
   }

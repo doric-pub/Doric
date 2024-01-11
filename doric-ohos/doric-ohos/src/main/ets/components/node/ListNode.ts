@@ -160,6 +160,7 @@ export class ListNode extends SuperNode<DoricList> {
       this.dataSource.loadMore = v.loadMore
     }
 
+    // onScrollEnd
     if (v.onScrollEnd) {
       List.onScrollStop(() => {
         const currentOffset = this.scroller.currentOffset()
@@ -170,6 +171,7 @@ export class ListNode extends SuperNode<DoricList> {
       })
     }
 
+    // onScroll
     if (v.onScroll) {
       List.onScroll((scrollOffset, scrollState) => {
         v.onScroll({
@@ -178,6 +180,7 @@ export class ListNode extends SuperNode<DoricList> {
       })
     }
 
+    // scrolledPosition
     if (v.scrolledPosition) {
       this.scroller.scrollTo({
         xOffset: 0,
@@ -185,9 +188,68 @@ export class ListNode extends SuperNode<DoricList> {
       })
     }
 
+    // scrollable
     if (v.scrollable) {
       List.enabled(v.scrollable)
     }
+
+    List.onItemDragStart((event, itemIndex: number) => {
+      return {
+        builder: () => {
+          // canDrag
+          if (v.canDrag) {
+            // itemCanDrag
+            if (v.itemCanDrag) {
+              const itemCanDrag = v.itemCanDrag(itemIndex)
+              if (itemCanDrag) {
+                return this.onItemDragStartView(this.view.allSubviews()[itemIndex])
+              }
+            }
+          }
+        }
+      }
+    })
+    List.onItemDragMove((event, itemIndex: number, insertIndex: number) => {
+      // onDragging
+      if (v.onDragging) {
+        v.onDragging(itemIndex, insertIndex + 1)
+      }
+    })
+    List.onItemDrop((event, fromIndex: number, insertIndex: number, isSuccess: boolean) => {
+      if (isSuccess) {
+        const toIndex = insertIndex + 1
+
+        const swapFunction = () => {
+          const cachedViews = (this.view as any).cachedViews as Map<string, View>
+          const view1 = cachedViews.get(`${fromIndex}`)
+          const view2 = cachedViews.get(`${toIndex}`)
+          if (view1 && view2) {
+            cachedViews.set(`${fromIndex}`, view2)
+            cachedViews.set(`${toIndex}`, view1)
+            this.dataSourceReload()
+          }
+
+          // onDragged
+          if (v.onDragged) {
+            v.onDragged(fromIndex, toIndex)
+          }
+        }
+
+        // beforeDragging
+        if (v.beforeDragging) {
+          const forbiddenDrops = v.beforeDragging(fromIndex)
+          if (forbiddenDrops) {
+            if ((forbiddenDrops as number[]).includes(toIndex)) {
+
+            } else {
+              swapFunction()
+            }
+          }
+        } else {
+          swapFunction()
+        }
+      }
+    })
 
     // commonConfig
     this.commonConfig(v);
@@ -255,5 +317,10 @@ export class ListNode extends SuperNode<DoricList> {
       })
       resolve(visibleItems)
     })
+  }
+
+  private onItemDragStartView(view: View) {
+    const childNode = createDoricViewNode(this.context, view)
+    childNode.render()
   }
 }

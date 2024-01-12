@@ -319,6 +319,17 @@ export class ListNode extends SuperNode<DoricList> {
     })
   }
 
+  private scrollToItem(props) {
+    return new Promise((resolve, reject) => {
+      const index = props.index
+      const animated = props.animated
+      const topOffset = props.topOffset
+
+      this.scroller.scrollToIndex(index)
+      resolve("")
+    })
+  }
+
   private onItemDragStartView(view: View) {
     const childNode = createDoricViewNode(this.context, view)
     childNode.render()

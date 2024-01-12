@@ -44,7 +44,7 @@ struct Index {
                 index: index
               }
             })
-          })
+          }).fontSize(25)
         }, (item: any, index?: number) => {
           return index.toString()
         })
@@ -53,5 +53,6 @@ struct Index {
     .width('100%')
     .height(`100%`)
     .backgroundColor(Color.White)
+    .align(Alignment.TopStart)
   }
 }

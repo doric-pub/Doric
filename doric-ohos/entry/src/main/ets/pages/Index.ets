@@ -24,6 +24,7 @@ struct Index {
     "ModalDemo",
     "NetworkDemo",
     "NotchDemo",
+    "RefreshableDemo",
     "ScrollerDemo",
     "ScrollerInListDemo",
     "SliderDemo",

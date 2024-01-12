@@ -23,6 +23,7 @@ import { NetworkPlugin } from '../plugin/NetworkPlugin'
 import { NotchPlugin } from '../plugin/NotchPlugin'
 import { NestedSliderNode } from '../node/NestedSliderNode'
 import { AnimatePlugin } from '../plugin/AnimatePlugin'
+import { RefreshableNode } from '../node/RefreshableNode'
 
 function injectGlobalFunction() {
   globalThis.nativeLog = (type: string, log: any) => {
@@ -72,4 +73,5 @@ export function initDoric() {
   registerDoricViewNode("FlowLayout", FlowLayoutNode)
   registerDoricViewNode("FlowLayoutItem", FlowLayoutItemNode)
   registerDoricViewNode("NestedSlider", NestedSliderNode)
+  registerDoricViewNode("Refreshable", RefreshableNode)
 }

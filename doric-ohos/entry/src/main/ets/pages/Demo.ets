@@ -28,6 +28,7 @@ import { ComplicatedAnimations } from '../panel/ComplicatedAnimations';
 import { AnimatorDemo } from '../panel/AnimatorDemo';
 import { ScrollerInListDemo } from '../panel/ScrollerInListDemo';
 import { HorizontalListInListDemo } from '../panel/HorizontalListInListDemo';
+import { RefreshableDemo } from '../panel/RefreshableDemo';
 
 @Entry
 @Component
@@ -54,6 +55,7 @@ struct Demo {
     ModalDemo,
     NetworkDemo,
     NotchDemo,
+    RefreshableDemo,
     ScrollerDemo,
     ScrollerInListDemo,
     SliderPanel,

@@ -3,10 +3,12 @@ import { BasicDataSource } from '../lib/BasicDataSource'
 import { createDoricViewNode } from '../lib/Registry'
 import { getGlobalObject } from '../lib/sandbox'
 import { SuperNode } from '../lib/SuperNode'
+import { parseInspectorRect } from '../lib/util'
 
 const List = getGlobalObject("List")
 const LazyForEach = getGlobalObject("LazyForEach")
 const Axis = getGlobalObject("Axis")
+const Scroller = getGlobalObject("Scroller")
 
 const LOAD_MORE_DATA = "loadMore"
 
@@ -56,6 +58,8 @@ class ViewDataSource extends BasicDataSource<string> {
 
 export class HorizontalListNode extends SuperNode<HorizontalList> {
   TAG = List
+
+  private scroller = new Scroller()
 
   private dataSource: ViewDataSource = new ViewDataSource()
   private lazyForEachElmtId?: string
@@ -122,7 +126,9 @@ export class HorizontalListNode extends SuperNode<HorizontalList> {
   }
 
   blend(v: HorizontalList) {
-    List.create()
+    List.create({
+      scroller: this.scroller
+    })
     List.listDirection(Axis.Horizontal)
 
     // itemCount
@@ -156,6 +162,97 @@ export class HorizontalListNode extends SuperNode<HorizontalList> {
       this.dataSource.loadMore = v.loadMore
     }
 
+    // onScrollEnd
+    if (v.onScrollEnd) {
+      List.onScrollStop(() => {
+        const currentOffset = this.scroller.currentOffset()
+        v.onScrollEnd({
+          x: currentOffset.xOffset,
+          y: currentOffset.yOffset
+        })
+      })
+    }
+
+    // onScroll
+    if (v.onScroll) {
+      List.onScroll((scrollOffset, scrollState) => {
+        v.onScroll({
+          x: scrollOffset, y: 0
+        })
+      })
+    }
+
+    // scrolledPosition
+    if (v.scrolledPosition) {
+      this.scroller.scrollTo({
+        xOffset: v.scrolledPosition,
+        yOffset: 0
+      })
+    }
+
+    // scrollable
+    if (v.scrollable) {
+      List.enabled(v.scrollable)
+    }
+
+    List.onItemDragStart((event, itemIndex: number) => {
+      return {
+        builder: () => {
+          // canDrag
+          if (v.canDrag) {
+            // itemCanDrag
+            if (v.itemCanDrag) {
+              const itemCanDrag = v.itemCanDrag(itemIndex)
+              if (itemCanDrag) {
+                return this.onItemDragStartView(this.view.allSubviews()[itemIndex])
+              }
+            }
+          }
+        }
+      }
+    })
+    List.onItemDragMove((event, itemIndex: number, insertIndex: number) => {
+      // onDragging
+      if (v.onDragging) {
+        v.onDragging(itemIndex, insertIndex + 1)
+      }
+    })
+    List.onItemDrop((event, fromIndex: number, insertIndex: number, isSuccess: boolean) => {
+      if (isSuccess) {
+        const toIndex = insertIndex + 1
+
+        const swapFunction = () => {
+          const cachedViews = (this.view as any).cachedViews as Map<string, View>
+          const view1 = cachedViews.get(`${fromIndex}`)
+          const view2 = cachedViews.get(`${toIndex}`)
+          if (view1 && view2) {
+            cachedViews.set(`${fromIndex}`, view2)
+            cachedViews.set(`${toIndex}`, view1)
+            this.dataSourceReload()
+          }
+
+          // onDragged
+          if (v.onDragged) {
+            v.onDragged(fromIndex, toIndex)
+          }
+        }
+
+        // beforeDragging
+        if (v.beforeDragging) {
+          const forbiddenDrops = v.beforeDragging(fromIndex)
+          if (forbiddenDrops) {
+            if ((forbiddenDrops as number[]).includes(toIndex)) {
+
+            } else {
+              swapFunction()
+            }
+          }
+        } else {
+          swapFunction()
+        }
+      }
+    })
+
     // commonConfig
     this.commonConfig(v);
   }
@@ -176,12 +273,67 @@ export class HorizontalListNode extends SuperNode<HorizontalList> {
   }
 
   private reload() {
-    ((this.view as any).cachedViews as Map<string, View>).clear()
-    this.dataSourceReload()
+    return new Promise((resolve, reject) => {
+      ((this.view as any).cachedViews as Map<string, View>).clear()
+      this.dataSourceReload()
+
+      resolve("")
+    })
   }
 
   private dataSourceReload() {
     this.reloadVersion++
     this.dataSource.reloadData()
+  }
+
+  private findCompletelyVisibleItems() {
+    return new Promise((resolve, reject) => {
+      const completelyVisibleItems: number[] = []
+
+      const listRect = parseInspectorRect(JSON.parse(getInspectorByKey(this.view.viewId)).$rect)
+
+      this.view.allSubviews().forEach((subview, index) => {
+        const inspector = getInspectorByKey(subview.viewId)
+
+        if (inspector !== "") {
+          const listItemRect = parseInspectorRect(JSON.parse(inspector).$rect)
+          if (listItemRect.left >= listRect.left && listItemRect.right <= listRect.right) {
+            completelyVisibleItems.push(index)
+          }
+        }
+      })
+      resolve(completelyVisibleItems)
+    })
+  }
+
+  private findVisibleItems() {
+    return new Promise((resolve, reject) => {
+      const visibleItems: number[] = []
+
+      this.view.allSubviews().forEach((subview, index) => {
+        const inspector = getInspectorByKey(subview.viewId)
+
+        if (inspector !== "") {
+          visibleItems.push(index)
+        }
+      })
+      resolve(visibleItems)
+    })
+  }
+
+  private scrollToItem(props) {
+    return new Promise((resolve, reject) => {
+      const index = props.index
+      const animated = props.animated
+      const topOffset = props.topOffset
+
+      this.scroller.scrollToIndex(index)
+      resolve("")
+    })
+  }
+
+  private onItemDragStartView(view: View) {
+    const childNode = createDoricViewNode(this.context, view)
+    childNode.render()
   }
 }

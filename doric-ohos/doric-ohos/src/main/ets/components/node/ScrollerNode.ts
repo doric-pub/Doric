@@ -9,6 +9,7 @@ const Alignment = getGlobalObject("Alignment")
 const ScrollDirection = getGlobalObject("ScrollDirection")
 const BarState = getGlobalObject("BarState")
 const Scroller = getGlobalObject("Scroller")
+const Curve = getGlobalObject("Curve")
 
 export class ScrollerNode extends SuperNode<DoricScroller> {
   TAG = Scroll
@@ -76,11 +77,93 @@ export class ScrollerNode extends SuperNode<DoricScroller> {
     Scroll.align(Alignment.TopStart) // align to top start, otherwise default is center x
     Scroll.scrollable(ScrollDirection.Vertical)
 
+    // scrollable
+    if (v.scrollable !== undefined) {
+      if (v.scrollable) {
+        Scroll.scrollable(ScrollDirection.Vertical)
+      } else {
+        Scroll.scrollable(ScrollDirection.None)
+      }
+    }
+
+    // contentOffset
+    if (v.contentOffset) {
+      this.scroller.scrollTo({
+        xOffset: v.contentOffset.x,
+        yOffset: v.contentOffset.y
+      })
+    }
+
+    // onScroll
+    if (v.onScroll) {
+      Scroll.onScroll((xOffset: number, yOffset: number) => {
+        v.onScroll({
+          x: xOffset, y: yOffset
+        })
+      })
+    }
+
+    // onScrollEnd
+    if (v.onScrollEnd) {
+      Scroll.onScrollStop(() => {
+        const currentOffset = this.scroller.currentOffset()
+        v.onScrollEnd({
+          x: currentOffset.xOffset,
+          y: currentOffset.yOffset
+        })
+      })
+    }
+
     // commonConfig
     this.commonConfig(v)
   }
 
   blendSubNodes(v: DoricScroller) {
 
+  }
+
+  private scrollTo(props) {
+    const offset = props.offset
+    const animated = props.animated
+    return new Promise((resolve, reject) => {
+      const option = {
+        xOffset: offset.x,
+        yOffset: offset.y,
+      } as any
+      if (animated) {
+        option.animation = {
+          duration: 300,
+          curve: Curve.Linear,
+        }
+      }
+      this.scroller.scrollTo(option)
+
+      resolve("")
+    })
+  }
+
+  private scrollBy(props) {
+    const offset = props.offset
+    const animated = props.animated
+    return new Promise((resolve, reject) => {
+      if (animated) {
+        const currentOffset = this.scroller.currentOffset()
+
+        const option = {
+          xOffset: currentOffset.xOffset + offset.x,
+          yOffset: currentOffset.yOffset + offset.y,
+        } as any
+        option.animation = {
+          duration: 300,
+          curve: Curve.Linear,
+        }
+        this.scroller.scrollTo(option)
+
+      } else {
+        this.scroller.scrollBy(offset.x, offset.y)
+      }
+
+      resolve("")
+    })
   }
 }

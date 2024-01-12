@@ -100,6 +100,13 @@ export class SliderNode extends SuperNode<Slider> {
       Swiper.disableSwipe(!v.scrollable)
     }
 
+    // slidePosition
+    if (v.slidePosition !== undefined) {
+      this.slidePage({
+        page: v.slidePosition
+      })
+    }
+
     // commonConfig
     this.commonConfig(v)
   }

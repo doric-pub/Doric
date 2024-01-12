@@ -251,6 +251,10 @@ export class ListNode extends SuperNode<DoricList> {
       }
     })
 
+    if (v.preloadItemCount) {
+      List.cachedCount(v.preloadItemCount)
+    }
+
     // commonConfig
     this.commonConfig(v);
   }

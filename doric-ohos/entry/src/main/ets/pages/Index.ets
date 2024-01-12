@@ -15,6 +15,7 @@ struct Index {
     "Gobang",
     "HelloDoric",
     "HorizontalListDemo",
+    "HorizontalListInListDemo",
     "ImageDemo",
     "InputDemo",
     "LayoutDemo",

@@ -27,6 +27,7 @@ import { StickDemo } from '../panel/StickDemo';
 import { ComplicatedAnimations } from '../panel/ComplicatedAnimations';
 import { AnimatorDemo } from '../panel/AnimatorDemo';
 import { ScrollerInListDemo } from '../panel/ScrollerInListDemo';
+import { HorizontalListInListDemo } from '../panel/HorizontalListInListDemo';
 
 @Entry
 @Component
@@ -44,6 +45,7 @@ struct Demo {
     Gobang,
     HelloDoric,
     HorizontalListPanel,
+    HorizontalListInListDemo,
     ImageDemo,
     InputDemo,
     LayoutDemo,

@@ -562,8 +562,23 @@
 
     if (scrolledPosition < self.rowCount && scrolledPosition >= 0) {
         for (int i = 0; i <= scrolledPosition; i++) {
-            [self collectionView:self.view cellForItemAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+            NSNumber *old = self.itemWidths[@(i)];
+            if (!old) {
+                NSDictionary *model = [self itemModelAt:i];
+                NSDictionary *props = model[@"props"];
+                DoricHorizontalListItemNode *itemNode = (DoricHorizontalListItemNode *) [DoricViewNode create:self.doricContext withType:@"HorizontalListItem"];
+                [itemNode initWithSuperNode:self];
+                itemNode.view.height = self.view.height;
+                itemNode.viewId = model[@"id"];
+                [itemNode blend:props];
+                CGFloat width = itemNode.view.doricLayout.widthSpec == DoricLayoutFit ? CGFLOAT_MAX : self.view.width;
+                [itemNode.view.doricLayout apply:CGSizeMake(width, self.view.height)];
+                [itemNode requestLayout];
+                self.itemWidths[@(i)] = @(itemNode.view.width);
+            }
         }
+        
+        [self.view.collectionViewLayout prepareLayout];
 
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.view scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:scrolledPosition inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:animated];

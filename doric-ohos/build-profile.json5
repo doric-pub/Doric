@@ -1,0 +1,59 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/wangjingpeng/.ohos/config/default_doric-ohos_WwD7J72hu9x3slGQ6J0MZEwfgygHcaXml7kIhG_QupM=.cer",
+          "storePassword": "0000001BDCECF1D834AE4424EACDD9888F12A266A49685476A0E47FC34D25DD8EF0822A89804D90709862F",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001BB783106D77B62F48CEED4EB119271FC05CADA1D4947EF9F4C0291F300515CE15F5F287499F5440",
+          "profile": "/Users/wangjingpeng/.ohos/config/default_doric-ohos_WwD7J72hu9x3slGQ6J0MZEwfgygHcaXml7kIhG_QupM=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/wangjingpeng/.ohos/config/default_doric-ohos_WwD7J72hu9x3slGQ6J0MZEwfgygHcaXml7kIhG_QupM=.p12"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.1(13)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "doric",
+      "srcPath": "./doric",
+    }
+  ]
+}

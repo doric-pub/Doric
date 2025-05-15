@@ -85,8 +85,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                 initJSEngine();
                 injectGlobal();
                 initDoricRuntime();
-                if (mDoricJSE instanceof DoricWebViewJSExecutor
-                        || mDoricJSE instanceof DoricWebShellJSExecutor) {
+                if (mDoricJSE instanceof DoricWebViewJSExecutor) {
                     mDoricJSE.loadJS("_prepared();", "");
                 }
                 initialized = true;
@@ -114,8 +113,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                 mDoricJSE = new DoricWebViewJSExecutor(Doric.application());
                 loadBuiltinJS("doric-web.js");
             } else {
-                mDoricRegistry.onLog(Log.WARN, "Use DoricWebShellJSExecutor");
-                mDoricJSE = new DoricWebShellJSExecutor(Doric.application());
+                mDoricRegistry.onLog(Log.ERROR, "Do not support any other js executors");
             }
         }
     }

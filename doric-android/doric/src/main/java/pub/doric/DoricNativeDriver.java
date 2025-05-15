@@ -28,7 +28,6 @@ import java.util.concurrent.Executors;
 import pub.doric.async.AsyncCall;
 import pub.doric.async.AsyncResult;
 import pub.doric.engine.DoricJSEngine;
-import pub.doric.engine.DoricWebShellJSEngine;
 import pub.doric.engine.DoricWebViewJSEngine;
 import pub.doric.performance.DoricPerformanceProfile;
 import pub.doric.utils.DoricConstant;
@@ -43,7 +42,6 @@ public class DoricNativeDriver implements IDoricDriver {
     public enum JSEngineType {
         JSE,
         WebView,
-        WebShell
     }
 
     private DoricJSEngine doricJSEngine;
@@ -204,9 +202,6 @@ public class DoricNativeDriver implements IDoricDriver {
     }
 
     public JSEngineType getJSEngineType() {
-        if (doricJSEngine instanceof DoricWebShellJSEngine) {
-            return JSEngineType.WebShell;
-        }
         if (doricJSEngine instanceof DoricWebViewJSEngine) {
             return JSEngineType.WebView;
         }
@@ -221,8 +216,6 @@ public class DoricNativeDriver implements IDoricDriver {
         mJSHandler.removeCallbacksAndMessages(null);
         if (type == JSEngineType.WebView) {
             doricJSEngine = new DoricWebViewJSEngine();
-        } else if (type == JSEngineType.WebShell) {
-            doricJSEngine = new DoricWebShellJSEngine();
         } else {
             doricJSEngine = new DoricJSEngine();
         }

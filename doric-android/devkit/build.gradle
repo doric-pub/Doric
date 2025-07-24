@@ -1,6 +1,5 @@
-plugins {
-    id 'com.android.library'
-}
+apply plugin: 'com.android.library'
+
 android {
     defaultConfig {
         minSdkVersion 21
@@ -15,6 +14,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
         }
     }
     namespace = "pub.doric.devkit"

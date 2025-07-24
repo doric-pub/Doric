@@ -56,7 +56,7 @@ afterEvaluate {
                     }
                 }
                 afterEvaluate {
-//                    from components.release
+                    from components.release
                 }
             }
         }

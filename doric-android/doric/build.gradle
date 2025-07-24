@@ -16,6 +16,11 @@ android {
             consumerProguardFiles 'proguard-rules.pro'
         }
     }
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
     namespace = "pub.doric"
 }
 

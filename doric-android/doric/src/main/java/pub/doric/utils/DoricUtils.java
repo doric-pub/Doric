@@ -415,7 +415,6 @@ public class DoricUtils {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static Bitmap rsBlur(Context context, Bitmap bitmap, int radius) throws RSRuntimeException {
         RenderScript rs = null;
         Allocation input = null;
@@ -690,8 +689,7 @@ public class DoricUtils {
 
     public static Bitmap blur(Context context, Bitmap inBitmap, int radius) {
         Bitmap bitmap;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
-                && radius <= 25) {
+        if (radius <= 25) {
             try {
                 bitmap = rsBlur(context, inBitmap, radius);
             } catch (Exception e) {

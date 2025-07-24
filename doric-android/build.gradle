@@ -1,48 +1,34 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    id("com.android.application") version '8.10.0' apply false
+    id("com.android.library") version '8.10.0' apply false
+}
 
-buildscript {
-    repositories {
-        google()
-        jcenter()
+tasks.register('clean', Delete) {
+    delete rootProject.buildFile
+}
 
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+def needReplaceLocal = true
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+gradle.startParameter.taskNames.each {
+    if (it.contains('publish')) {
+        needReplaceLocal = false
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-    }
-    def needReplaceLocal = true
-    gradle.startParameter.taskNames.each {
-        if (it.contains('uploadArchives')) {
-            needReplaceLocal = false
-        }
-    }
-    if (needReplaceLocal) {
-        configurations.all {
+if (needReplaceLocal) {
+    allprojects {
+        configurations.configureEach {
             resolutionStrategy {
                 dependencySubstitution {
-                    substitute module('pub.doric:core') with project(":doric")
-                    substitute module('pub.doric:devkit') with project(":devkit")
-                    substitute module('pub.doric:jse') with project(":jse")
+                    substitute module('pub.doric:core') using project(":doric")
+                    substitute module('pub.doric:devkit') using project(":devkit")
+                    substitute module('pub.doric:jse') using project(":jse")
                 }
             }
         }
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
 Properties properties = new Properties()
 properties.load(project.rootProject.file('version.properties').newDataInputStream())
 ext {
@@ -50,11 +36,11 @@ ext {
     Version = properties.version
 }
 
-task publisCore dependsOn(":doric:uploadArchives") {
+task publisCore dependsOn(":doric:publish") {
     println "doric published"
 }
 
-task publishDevKit dependsOn(publisCore, ":devkit:uploadArchives") {
+task publishDevKit dependsOn(publisCore, ":devkit:publish") {
     println "devkit published"
 }
 

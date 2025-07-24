@@ -911,7 +911,7 @@ declare module "doric" {
 		ScaleToFill = 0,
 		ScaleAspectFit = 1,
 		ScaleAspectFill = 2,
-		Tile = 3,// image tile mode
+		Tile = 3,
 		ScaleAspectFitLeftTop = 4,
 		ScaleAspectFitLeftBottom = 5,
 		ScaleAspectFitRightTop = 6,

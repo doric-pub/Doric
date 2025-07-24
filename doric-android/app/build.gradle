@@ -1,12 +1,13 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+}
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion '30.0.3'
     defaultConfig {
         applicationId "pub.doric.demo"
-        minSdkVersion 19
-        targetSdkVersion 31
+        minSdkVersion 21
+        compileSdk 35
+        targetSdkVersion 35
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -22,6 +23,7 @@ android {
             assets.srcDirs = [project.getRootDir().getParent() + "/doric-demo/bundle"]
         }
     }
+    namespace = "pub.doric.demo"
 }
 
 afterEvaluate {

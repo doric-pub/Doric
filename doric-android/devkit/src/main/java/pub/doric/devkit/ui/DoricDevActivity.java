@@ -178,10 +178,10 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
         tvInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View clickView) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(DoricDevActivity.this, R.style.Theme_Doric_Modal_Prompt);
+                AlertDialog.Builder builder = new AlertDialog.Builder(DoricDevActivity.this, pub.doric.R.style.Theme_Doric_Modal_Prompt);
                 builder.setTitle("Please input devkit ip");
-                View v = LayoutInflater.from(DoricDevActivity.this).inflate(R.layout.doric_modal_prompt, null);
-                final EditText editText = v.findViewById(R.id.edit_input);
+                View v = LayoutInflater.from(DoricDevActivity.this).inflate(pub.doric.R.layout.doric_modal_prompt, null);
+                final EditText editText = v.findViewById(pub.doric.R.id.edit_input);
                 editText.setHint("192.168.1.1");
                 String ip = DoricDev.getInstance().getIP();
                 if (!TextUtils.isEmpty(ip)) {
@@ -347,7 +347,7 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                     actionMap.put("View source", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal_Alert);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), pub.doric.R.style.Theme_Doric_Modal_Alert);
                             builder.setTitle(String.format(Locale.getDefault(),
                                     "View source: %s",
                                     context.getSource()));
@@ -419,7 +419,7 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                         }
                     });
                     final String[] items = actionMap.keySet().toArray(new String[0]);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), pub.doric.R.style.Theme_Doric_Modal);
                     builder.setTitle(String.format("%s %s", context.getContextId(), context.getSource()));
                     builder.setIcon(new BitmapDrawable(holder.itemView.getContext().getResources(), icon_on));
                     builder.setItems(items, new DialogInterface.OnClickListener() {

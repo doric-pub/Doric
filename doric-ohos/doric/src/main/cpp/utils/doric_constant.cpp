@@ -34,3 +34,6 @@ const std::string DoricConstant::DORIC_ENTITY_INIT = "__init__";
 const std::string DoricConstant::DORIC_ENTITY_CREATE = "__onCreate__";
 const std::string DoricConstant::DORIC_ENTITY_BUILD = "__build__";
 const std::string DoricConstant::DORIC_ENTITY_DESTROY = "__onDestroy__";
+const std::string DoricConstant::DORIC_ENTITY_SHOW = "__onShow__";
+const std::string DoricConstant::DORIC_ENTITY_HIDDEN = "__onHidden__";
+const std::string DoricConstant::DORIC_ENTITY_ENV_CHANGE = "__onEnvChanged__";

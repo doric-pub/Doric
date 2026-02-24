@@ -33,4 +33,7 @@ public:
     static const std::string DORIC_ENTITY_INIT;
     static const std::string DORIC_ENTITY_BUILD;
     static const std::string DORIC_ENTITY_DESTROY;
+    static const std::string DORIC_ENTITY_SHOW;
+    static const std::string DORIC_ENTITY_HIDDEN;
+    static const std::string DORIC_ENTITY_ENV_CHANGE;
 };

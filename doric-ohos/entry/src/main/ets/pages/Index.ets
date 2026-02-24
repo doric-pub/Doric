@@ -1,22 +1,29 @@
+import { DoricViewController } from 'doric'
+
 @Entry
 @Component
 struct Index {
-  @State message: string = 'Hello World'
+  @State flag: boolean = false
+
+  aboutToAppear(): void {
+    setTimeout(() => {
+      this.flag = true
+    }, 3000)
+  }
 
   build() {
-    RelativeContainer() {
-      Text(this.message)
-        .id('HelloWorld')
-        .fontSize($r('app.float.page_text_font_size'))
-        .fontWeight(FontWeight.Bold)
-        .alignRules({
-          center: { anchor: '__container__', align: VerticalAlign.Center },
-          middle: { anchor: '__container__', align: HorizontalAlign.Center }
+    Column() {
+      // Use DoricViewController to load and display a Doric JS panel
+      // Aligned with iOS usage: [[DoricViewController alloc] initWithSource:alias:extra:]
+      if (this.flag) {
+        DoricViewController({
+          source: 'Counter',
+          alias: 'Counter',
+          extra: ''
         })
-        .onClick(() => {
-        })
+      }
     }
-    .height('100%')
     .width('100%')
+    .height('100%')
   }
 }

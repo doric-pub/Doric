@@ -10,3 +10,5 @@
 /.clang-tidy
 **/.test
 /.appanalyzer
+
+/entry/src/main/resources/rawfile/src/

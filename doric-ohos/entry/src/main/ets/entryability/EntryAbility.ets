@@ -10,6 +10,9 @@ export default class EntryAbility extends UIAbility {
     this.context.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET);
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onCreate');
 
+    // Initialize Doric engine with resource manager
+    // This also initializes the DoricJSLoaderManager with default loaders
+    // Aligned with iOS: init(self.context.resourceManager) in AppDelegate
     init(this.context.resourceManager)
   }
 

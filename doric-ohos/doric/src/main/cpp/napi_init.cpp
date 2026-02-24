@@ -195,6 +195,57 @@ static napi_value TeardownDoric(napi_env env, napi_callback_info info) {
     return undefined;
 }
 
+/**
+ * callEntityMethod(contextId: string, method: string, ...args: string[]): string
+ *
+ * Invoke a method on a Doric context entity (aligned with iOS DoricContext.callEntity).
+ * This calls doric.jsCallEntityMethod(contextId, method, ...args) followed by hook.
+ */
+static napi_value CallEntityMethod(napi_env env, napi_callback_info info) {
+    size_t argc = 16;
+    napi_value argv[16] = {nullptr};
+    napi_get_cb_info(env, info, &argc, argv, nullptr, nullptr);
+
+    if (argc < 2 || !g_doricJSEngine) {
+        napi_value undefined;
+        napi_get_undefined(env, &undefined);
+        return undefined;
+    }
+
+    std::string contextId = NapiGetString(env, argv[0]);
+    std::string method = NapiGetString(env, argv[1]);
+
+    // Build args: [contextId, method, ...extraArgs]
+    std::vector<std::string> args;
+    args.push_back(contextId);
+    args.push_back(method);
+    for (size_t i = 2; i < argc; i++) {
+        napi_valuetype type;
+        napi_typeof(env, argv[i], &type);
+        if (type == napi_string) {
+            args.push_back(NapiGetString(env, argv[i]));
+        } else if (type == napi_number) {
+            double num;
+            napi_get_value_double(env, argv[i], &num);
+            if (num == static_cast<int64_t>(num)) {
+                args.push_back(std::to_string(static_cast<int64_t>(num)));
+            } else {
+                args.push_back(std::to_string(num));
+            }
+        } else if (type == napi_boolean) {
+            bool val;
+            napi_get_value_bool(env, argv[i], &val);
+            args.push_back(val ? "true" : "false");
+        }
+    }
+
+    std::string result = g_doricJSEngine->invokeDoricMethod("jsCallEntityMethod", args);
+
+    napi_value napiResult;
+    napi_create_string_utf8(env, result.c_str(), result.size(), &napiResult);
+    return napiResult;
+}
+
 // ======================================================================
 // Module registration
 // ======================================================================
@@ -208,6 +259,7 @@ static napi_value Init(napi_env env, napi_value exports) {
         {"invokeDoricMethod", nullptr, InvokeDoricMethod, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"setEnvironmentValue", nullptr, SetEnvironmentValue, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"teardownDoric", nullptr, TeardownDoric, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"callEntityMethod", nullptr, CallEntityMethod, nullptr, nullptr, nullptr, napi_default, nullptr},
     };
     napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc);
     return exports;

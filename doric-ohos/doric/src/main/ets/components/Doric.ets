@@ -4,9 +4,11 @@ import {
   destroyContext,
   invokeDoricMethod,
   setEnvironmentValue,
-  teardownDoric
+  teardownDoric,
+  callEntityMethod
 } from 'libdoric.so'
 import { resourceManager } from '@kit.LocalizationKit';
+import { DoricJSLoaderManager } from './DoricJSLoaderManager'
 
 /**
  * DoricEngine - ArkTS wrapper for the native Doric JS Engine.
@@ -23,6 +25,8 @@ export class DoricEngine {
    */
   static init(resMgr: resourceManager.ResourceManager): void {
     initDoric(resMgr)
+    // Initialize default JS loaders with the resource manager
+    DoricJSLoaderManager.getInstance().initDefaultLoaders(resMgr)
   }
 
   /**
@@ -47,6 +51,14 @@ export class DoricEngine {
    */
   static invokeDoricMethod(method: string, ...args: (string | number | boolean)[]): string {
     return invokeDoricMethod(method, ...args)
+  }
+
+  /**
+   * Call a method on a specific context entity.
+   * Aligned with iOS: DoricContext.callEntity:withArgumentsArray:
+   */
+  static callEntityMethod(contextId: string, method: string, ...args: (string | number | boolean)[]): string {
+    return callEntityMethod(contextId, method, ...args)
   }
 
   /**

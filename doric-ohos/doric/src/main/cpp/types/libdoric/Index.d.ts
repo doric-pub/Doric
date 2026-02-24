@@ -35,3 +35,9 @@ export const setEnvironmentValue: (key: string, value: string | number) => void;
  * Aligned with iOS: teardown
  */
 export const teardownDoric: () => void;
+
+/**
+ * Call a method on a Doric context entity.
+ * Aligned with iOS: DoricContext.callEntity:withArgumentsArray:
+ */
+export const callEntityMethod: (contextId: string, method: string, ...args: (string | number | boolean)[]) => string;

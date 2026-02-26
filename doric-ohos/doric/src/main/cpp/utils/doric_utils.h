@@ -40,7 +40,7 @@ public:
         int result = OH_ResourceManager_ReadRawFile(rawFile, data.get(), rawFileSize);
         OH_ResourceManager_CloseRawFile(rawFile);
 
-        std::string fileContent(reinterpret_cast<char *>(data.get()));
+        std::string fileContent(reinterpret_cast<char *>(data.get()), rawFileSize);
         return fileContent;
     }
 };

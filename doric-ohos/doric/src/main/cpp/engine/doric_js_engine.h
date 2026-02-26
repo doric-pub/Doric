@@ -452,7 +452,7 @@ private:
         std::string libName = DoricConstant::DORIC_BUNDLE_LIB;
         std::string libJS = DoricUtils::ReadRawFile(libName);
         if (!libJS.empty()) {
-            jsExecutor_->loadJS(packageModuleScript(libName, libJS), "Module://" + libName);
+            jsExecutor_->loadJS(packageModuleScript(DoricConstant::DORIC_MODULE_LIB, libJS), "Module://" + libName);
         } else {
             OH_LOG_Print(LOG_APP, LOG_ERROR, 0x8000, "Doric",
                          "Failed to load doric lib JS bundle: %{public}s", libName.c_str());

@@ -1,3 +1,4 @@
+#include "bridge/doric_bridge_callback.h"
 #include "engine/doric_js_engine.h"
 #include "napi/native_api.h"
 #include "utils/doric_utils.h"
@@ -246,6 +247,48 @@ static napi_value CallEntityMethod(napi_env env, napi_callback_info info) {
     return napiResult;
 }
 
+/**
+ * registerBridgeCallback(callback: (contextId: string, module: string, method: string,
+ *                                    callbackId: string, argument: string) => void): void
+ *
+ * Register the ArkTS callback function that receives bridge calls from JS.
+ * This must be called once during initialization, after initDoric().
+ *
+ * The callback will be invoked on the ArkTS main thread whenever JS calls nativeBridge().
+ * The ArkTS side should route the call to DoricBridgeExtension.callNative().
+ */
+static napi_value RegisterBridgeCallback(napi_env env, napi_callback_info info) {
+    size_t argc = 1;
+    napi_value argv[1] = {nullptr};
+    napi_get_cb_info(env, info, &argc, argv, nullptr, nullptr);
+
+    if (argc < 1) {
+        OH_LOG_Print(LOG_APP, LOG_ERROR, 0x8000, "Doric",
+                     "registerBridgeCallback: callback function required");
+        napi_value undefined;
+        napi_get_undefined(env, &undefined);
+        return undefined;
+    }
+
+    // Verify that the argument is a function
+    napi_valuetype valueType;
+    napi_typeof(env, argv[0], &valueType);
+    if (valueType != napi_function) {
+        OH_LOG_Print(LOG_APP, LOG_ERROR, 0x8000, "Doric",
+                     "registerBridgeCallback: argument must be a function");
+        napi_value undefined;
+        napi_get_undefined(env, &undefined);
+        return undefined;
+    }
+
+    // Register the callback with DoricBridgeCallback singleton
+    DoricBridgeCallback::getInstance().registerCallback(env, argv[0]);
+
+    napi_value undefined;
+    napi_get_undefined(env, &undefined);
+    return undefined;
+}
+
 // ======================================================================
 // Module registration
 // ======================================================================
@@ -260,6 +303,7 @@ static napi_value Init(napi_env env, napi_value exports) {
         {"setEnvironmentValue", nullptr, SetEnvironmentValue, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"teardownDoric", nullptr, TeardownDoric, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"callEntityMethod", nullptr, CallEntityMethod, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"registerBridgeCallback", nullptr, RegisterBridgeCallback, nullptr, nullptr, nullptr, napi_default, nullptr},
     };
     napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc);
     return exports;

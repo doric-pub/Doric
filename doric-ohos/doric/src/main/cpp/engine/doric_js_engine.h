@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../bridge/doric_bridge_callback.h"
 #include "../utils/doric_constant.h"
 #include "../utils/doric_utils.h"
 #include "doric_jse_interface.h"
@@ -269,6 +270,11 @@ private:
 
     /**
      * nativeBridge(contextId, module, method, callbackId, argument) - JS -> Native bridge callback.
+     *
+     * Serializes the JS argument to JSON string and dispatches to ArkTS side via
+     * DoricBridgeCallback (napi_threadsafe_function).
+     *
+     * Aligned with iOS DoricJSEngine NativeBridge → DoricBridgeExtension.callNativeWithContextId
      */
     static JSVM_Value NativeBridge(JSVM_Env env, JSVM_CallbackInfo info) {
         size_t argc = 5;
@@ -279,13 +285,56 @@ private:
         std::string module = DoricUtils::GetValueString(env, args[1]);
         std::string method = DoricUtils::GetValueString(env, args[2]);
         std::string callbackId = DoricUtils::GetValueString(env, args[3]);
-        // args[4] is the argument value - to be processed by bridge extension
+
+        // Serialize args[4] (the JS argument object) to JSON string
+        // This is analogous to iOS passing NSDictionary / Android passing JSObject
+        std::string argument;
+        if (argc > 4 && args[4] != nullptr) {
+            JSVM_ValueType argType;
+            OH_JSVM_Typeof(env, args[4], &argType);
+
+            if (argType == JSVM_STRING) {
+                argument = DoricUtils::GetValueString(env, args[4]);
+            } else if (argType == JSVM_OBJECT) {
+                // Use JSON.stringify to serialize the object
+                JSVM_Value global = nullptr;
+                OH_JSVM_GetGlobal(env, &global);
+                JSVM_Value jsonKey = nullptr;
+                OH_JSVM_CreateStringUtf8(env, "JSON", JSVM_AUTO_LENGTH, &jsonKey);
+                JSVM_Value jsonObj = nullptr;
+                OH_JSVM_GetProperty(env, global, jsonKey, &jsonObj);
+                JSVM_Value stringifyKey = nullptr;
+                OH_JSVM_CreateStringUtf8(env, "stringify", JSVM_AUTO_LENGTH, &stringifyKey);
+                JSVM_Value stringifyFunc = nullptr;
+                OH_JSVM_GetProperty(env, jsonObj, stringifyKey, &stringifyFunc);
+
+                JSVM_Value result = nullptr;
+                JSVM_Value stringifyArgs[] = {args[4]};
+                JSVM_Status callStatus = OH_JSVM_CallFunction(env, jsonObj, stringifyFunc, 1, stringifyArgs, &result);
+                if (callStatus == JSVM_OK && result != nullptr) {
+                    argument = DoricUtils::GetValueString(env, result);
+                }
+            } else if (argType == JSVM_NUMBER) {
+                double num;
+                OH_JSVM_GetValueDouble(env, args[4], &num);
+                if (num == static_cast<int64_t>(num)) {
+                    argument = std::to_string(static_cast<int64_t>(num));
+                } else {
+                    argument = std::to_string(num);
+                }
+            } else if (argType == JSVM_BOOLEAN) {
+                bool val;
+                OH_JSVM_GetValueBool(env, args[4], &val);
+                argument = val ? "true" : "false";
+            }
+        }
 
         OH_LOG_Print(LOG_APP, LOG_DEBUG, 0x8000, "Doric",
                      "NativeBridge: ctx=%{public}s mod=%{public}s method=%{public}s cb=%{public}s",
                      contextId.c_str(), module.c_str(), method.c_str(), callbackId.c_str());
 
-        // TODO: Route to DoricBridgeExtension for actual native plugin dispatch
+        // Dispatch to ArkTS side via threadsafe function
+        DoricBridgeCallback::getInstance().dispatch(contextId, module, method, callbackId, argument);
 
         JSVM_Value undefined = nullptr;
         OH_JSVM_GetUndefined(env, &undefined);

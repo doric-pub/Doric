@@ -20,6 +20,11 @@ import {
   callEntityMethod
 } from 'libdoric.so'
 import { DoricNavigatorDelegate, DoricNavBarDelegate, DoricStatusBarDelegate } from './DoricDelegates'
+import { DoricContextRef, DoricRootNode, DoricViewNode } from './DoricViewNode'
+import { hilog } from '@kit.PerformanceAnalysisKit'
+
+const TAG = 'DoricContext'
+const DOMAIN = 0x8000
 
 /**
  * DoricContextManager - Manages all active DoricContext instances.
@@ -94,11 +99,15 @@ class DoricInitialParams {
  *   - source: script source identifier
  *   - script: raw JS script content
  *   - extra: initialization extra data (JSON string)
+ *   - rootNode: the root of the view tree
+ *   - headNodes: dictionary of head-level node maps (for popover, etc.)
+ *   - pluginInstanceMap: cached plugin instances
  *   - navigator / navBar / statusBar delegates
  *   - callEntity: invoke JS entity methods
+ *   - targetViewNode: find a view node by ID
  *   - build / onShow / onHidden / onEnvChanged lifecycle
  */
-export class DoricContext {
+export class DoricContext implements DoricContextRef {
   contextId: string = ''
   source: string = ''
   script: string = ''
@@ -110,6 +119,27 @@ export class DoricContext {
   navBar: DoricNavBarDelegate | undefined = undefined
   statusBar: DoricStatusBarDelegate | undefined = undefined
 
+  /**
+   * Root node of the view tree.
+   * Aligned with iOS: @property(nonatomic, strong) DoricRootNode *rootNode;
+   * Aligned with Android: private RootNode mRootNode;
+   */
+  rootNode: DoricRootNode
+
+  /**
+   * Head-level nodes map (for popover, overlays, etc.).
+   * Keyed by type name, then by viewId.
+   * Aligned with iOS: @property(nonatomic, strong) NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, DoricViewNode *> *> *headNodes;
+   */
+  private headNodes_: Map<string, Map<string, DoricViewNode>> = new Map()
+
+  /**
+   * Cached plugin instances keyed by module name.
+   * Aligned with iOS: @property(nonatomic, strong) NSMutableDictionary *pluginInstanceMap;
+   * Aligned with Android: HashMap<String, DoricJavaPlugin> mPluginMap;
+   */
+  private pluginInstanceMap_: Map<string, Object> = new Map()
+
   /** Initial params for build, aligned with iOS initialParams */
   private initialParams_: DoricInitialParams = new DoricInitialParams()
 
@@ -120,6 +150,10 @@ export class DoricContext {
   constructor(script: string, source: string, extra?: string) {
     this.script = script
     this.source = source
+
+    // Create root node
+    // Aligned with iOS: DoricRootNode *rootNode = [[DoricRootNode alloc] initWithContext:self];
+    this.rootNode = new DoricRootNode(this)
 
     // Register with the context manager (this also calls prepareContext on native)
     DoricContextManager.getInstance().createContext(this, script, source)
@@ -178,6 +212,78 @@ export class DoricContext {
   }
 
   /**
+   * Find a view node by its viewId.
+   *
+   * Aligned with iOS:
+   *   - (DoricViewNode *)targetViewNode:(NSString *)viewId;
+   *   Logic: first check rootNode, then check all headNodes maps.
+   *
+   * Aligned with Android:
+   *   public ViewNode<?> targetViewNode(String id)
+   */
+  targetViewNode(viewId: string): DoricViewNode | undefined {
+    // Check root node first
+    if (this.rootNode.viewId === viewId) {
+      return this.rootNode
+    }
+    // Check head nodes (popover, overlays, etc.)
+    let found: DoricViewNode | undefined = undefined
+    this.headNodes_.forEach((nodeMap: Map<string, DoricViewNode>) => {
+      if (found === undefined) {
+        const node = nodeMap.get(viewId)
+        if (node !== undefined) {
+          found = node
+        }
+      }
+    })
+    return found
+  }
+
+  /**
+   * Register a head-level node (for popover, overlays, etc.).
+   * Aligned with iOS: self.headNodes[type][viewId] = node;
+   */
+  addHeadNode(type: string, node: DoricViewNode): void {
+    let nodeMap = this.headNodes_.get(type)
+    if (nodeMap === undefined) {
+      nodeMap = new Map()
+      this.headNodes_.set(type, nodeMap)
+    }
+    nodeMap.set(node.viewId, node)
+  }
+
+  /**
+   * Remove a head-level node.
+   */
+  removeHeadNode(type: string, viewId: string): void {
+    const nodeMap = this.headNodes_.get(type)
+    if (nodeMap !== undefined) {
+      nodeMap.delete(viewId)
+    }
+  }
+
+  /**
+   * Get all head nodes of a given type.
+   */
+  getHeadNodes(type: string): Map<string, DoricViewNode> | undefined {
+    return this.headNodes_.get(type)
+  }
+
+  /**
+   * Get a cached plugin instance.
+   */
+  getPlugin(module: string): Object | undefined {
+    return this.pluginInstanceMap_.get(module)
+  }
+
+  /**
+   * Cache a plugin instance.
+   */
+  setPlugin(module: string, plugin: Object): void {
+    this.pluginInstanceMap_.set(module, plugin)
+  }
+
+  /**
    * Reload with a new script.
    * Aligned with iOS: - (void)reload:(NSString *)script;
    */
@@ -187,6 +293,13 @@ export class DoricContext {
 
     this.script = script
     this.destroyed = false
+
+    // Reset root node
+    this.rootNode.viewId = ''
+    this.rootNode.clearSubModel()
+
+    // Clear plugin cache
+    this.pluginInstanceMap_.clear()
 
     // Re-prepare at native level
     prepareContext(this.contextId, script, this.source)
@@ -210,6 +323,8 @@ export class DoricContext {
     }
     this.destroyed = true
     this.callEntity('__onDestroy__')
+    this.pluginInstanceMap_.clear()
+    this.headNodes_.clear()
     DoricContextManager.getInstance().destroyContext(this)
   }
 }

@@ -5,10 +5,16 @@ import {
   invokeDoricMethod,
   setEnvironmentValue,
   teardownDoric,
-  callEntityMethod
+  callEntityMethod,
+  registerBridgeCallback
 } from 'libdoric.so'
 import { resourceManager } from '@kit.LocalizationKit';
 import { DoricJSLoaderManager } from './DoricJSLoaderManager'
+import { DoricBridgeExtension } from './DoricBridgeExtension'
+import { hilog } from '@kit.PerformanceAnalysisKit'
+
+const TAG = 'DoricEngine'
+const DOMAIN = 0x8000
 
 /**
  * DoricEngine - ArkTS wrapper for the native Doric JS Engine.
@@ -27,6 +33,22 @@ export class DoricEngine {
     initDoric(resMgr)
     // Initialize default JS loaders with the resource manager
     DoricJSLoaderManager.getInstance().initDefaultLoaders(resMgr)
+
+    // Register the bridge callback so that nativeBridge calls from JS
+    // are routed to DoricBridgeExtension on the ArkTS side.
+    // Aligned with iOS: DoricJSEngine → DoricBridgeExtension chain
+    const bridgeExtension = DoricBridgeExtension.getInstance()
+    registerBridgeCallback(
+      (contextId: string, module: string, method: string,
+        callbackId: string, argument: string): void => {
+        hilog.debug(DOMAIN, TAG,
+          'Bridge callback: ctx=%{public}s mod=%{public}s method=%{public}s',
+          contextId, module, method)
+        bridgeExtension.callNative(contextId, module, method, callbackId, argument)
+      }
+    )
+
+    hilog.info(DOMAIN, TAG, 'DoricEngine initialized with bridge callback')
   }
 
   /**

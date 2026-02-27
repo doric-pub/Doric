@@ -188,10 +188,37 @@ public:
             return "";
         }
 
-        // Prepare arguments
+        // Prepare arguments - handle arrays specially
         std::vector<JSVM_Value> jsArgs(args.size());
         for (size_t i = 0; i < args.size(); i++) {
-            OH_JSVM_CreateStringUtf8(env_, args[i].c_str(), JSVM_AUTO_LENGTH, &jsArgs[i]);
+            const std::string &arg = args[i];
+            // Check if the argument looks like a JSON array
+            if (!arg.empty() && arg[0] == '[' && arg[arg.length() - 1] == ']') {
+                // Try to parse as JSON array
+                JSVM_Value global = nullptr;
+                OH_JSVM_GetGlobal(env_, &global);
+                JSVM_Value jsonKey = nullptr;
+                OH_JSVM_CreateStringUtf8(env_, "JSON", JSVM_AUTO_LENGTH, &jsonKey);
+                JSVM_Value jsonObj = nullptr;
+                OH_JSVM_GetProperty(env_, global, jsonKey, &jsonObj);
+                JSVM_Value parseKey = nullptr;
+                OH_JSVM_CreateStringUtf8(env_, "parse", JSVM_AUTO_LENGTH, &parseKey);
+                JSVM_Value parseFunc = nullptr;
+                OH_JSVM_GetProperty(env_, jsonObj, parseKey, &parseFunc);
+                
+                JSVM_Value jsonString = nullptr;
+                OH_JSVM_CreateStringUtf8(env_, arg.c_str(), JSVM_AUTO_LENGTH, &jsonString);
+                JSVM_Value parseArgs[] = {jsonString};
+                JSVM_Status parseStatus = OH_JSVM_CallFunction(env_, jsonObj, parseFunc, 1, parseArgs, &jsArgs[i]);
+                
+                if (parseStatus != JSVM_OK) {
+                    // Parsing failed, treat as regular string
+                    OH_JSVM_CreateStringUtf8(env_, arg.c_str(), JSVM_AUTO_LENGTH, &jsArgs[i]);
+                }
+            } else {
+                // Regular string argument
+                OH_JSVM_CreateStringUtf8(env_, arg.c_str(), JSVM_AUTO_LENGTH, &jsArgs[i]);
+            }
         }
 
         // Call the function

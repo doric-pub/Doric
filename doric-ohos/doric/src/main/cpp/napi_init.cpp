@@ -237,6 +237,43 @@ static napi_value CallEntityMethod(napi_env env, napi_callback_info info) {
             bool val;
             napi_get_value_bool(env, argv[i], &val);
             args.push_back(val ? "true" : "false");
+        } else if (type == napi_object) {
+            // Check if it's an array
+            bool isArray = false;
+            napi_is_array(env, argv[i], &isArray);
+            if (isArray) {
+                // Convert array to JSON string
+                uint32_t arrayLength = 0;
+                napi_get_array_length(env, argv[i], &arrayLength);
+                std::string arrayJson = "[";
+                for (uint32_t j = 0; j < arrayLength; j++) {
+                    napi_value element;
+                    napi_get_element(env, argv[i], j, &element);
+                    napi_valuetype elementType;
+                    napi_typeof(env, element, &elementType);
+                    
+                    if (j > 0) arrayJson += ",";
+                    
+                    if (elementType == napi_string) {
+                        std::string str = NapiGetString(env, element);
+                        arrayJson += "\"" + str + "\"";
+                    } else if (elementType == napi_number) {
+                        double num;
+                        napi_get_value_double(env, element, &num);
+                        if (num == static_cast<int64_t>(num)) {
+                            arrayJson += std::to_string(static_cast<int64_t>(num));
+                        } else {
+                            arrayJson += std::to_string(num);
+                        }
+                    } else if (elementType == napi_boolean) {
+                        bool val;
+                        napi_get_value_bool(env, element, &val);
+                        arrayJson += val ? "true" : "false";
+                    }
+                }
+                arrayJson += "]";
+                args.push_back(arrayJson);
+            }
         }
     }
 

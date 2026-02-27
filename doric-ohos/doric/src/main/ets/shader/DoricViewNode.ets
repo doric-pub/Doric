@@ -27,7 +27,7 @@ const DOMAIN = 0x8000
 export interface DoricContextRef {
   contextId: string
   destroyed: boolean
-  callEntity(method: string, ...args: (string | number | boolean)[]): string
+  callEntity(method: string, ...args: (string | number | boolean | string[])[]): string
   onRenderFinished(): void
 }
 
@@ -217,10 +217,10 @@ export class DoricViewNode {
     return ids
   }
 
-  callJSResponse(funcId: string, ...args: (string | number | boolean)[]): string {
+  callJSResponse(funcId: string, ...args: (string | number | boolean | string[])[]): string {
     return this.doricContext.callEntity(
       '__response__',
-      JSON.stringify(this.getIdList()),
+      this.getIdList(),
       funcId,
       ...args
     )

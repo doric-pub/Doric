@@ -79,7 +79,7 @@ export class DoricJSEngine {
    * Call a method on a specific context entity.
    * Aligned with iOS: DoricContext.callEntity:withArgumentsArray:
    */
-  static callEntityMethod(contextId: string, method: string, ...args: (string | number | boolean)[]): string {
+  static callEntityMethod(contextId: string, method: string, ...args: (string | number | boolean | string[])[]): string {
     return callEntityMethod(contextId, method, ...args)
   }
 

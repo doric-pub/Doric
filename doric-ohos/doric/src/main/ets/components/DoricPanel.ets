@@ -15,6 +15,9 @@
  */
 
 import { DoricContext } from './DoricContext'
+import { DoricViewNode, DoricGroupNode } from './DoricViewNode'
+import { DoricNodeModel } from './DoricNodeModel'
+import { DoricNodeRenderer } from './DoricNodeRenderer'
 import { hilog } from '@kit.PerformanceAnalysisKit'
 
 const TAG = 'DoricPanel'
@@ -23,10 +26,15 @@ const DOMAIN = 0x8000
 /**
  * DoricPanel - ArkTS component that hosts a DoricContext.
  *
- * Aligned with iOS DoricPanel (UIViewController):
+ * Aligned with iOS DoricPanel / DoricPanelView:
  *   - config: initialize with script/alias/extra
  *   - lifecycle: appear/disappear -> onShow/onHidden
  *   - size tracking: build on size change
+ *
+ * Rendering flow:
+ *   JS -> nativeBridge -> DoricShaderPlugin.render() -> DoricViewNode.blend()
+ *   -> Updates DoricNodeModel -> DoricContext.onRenderCallback
+ *   -> Updates rootNodeModel_ (@State) -> ArkUI re-renders DoricNodeRenderer
  *
  * Usage:
  *   DoricPanel({
@@ -47,12 +55,23 @@ export struct DoricPanel {
   frameChangedBlock?: (width: number, height: number) => void
 
   /** The DoricContext managed by this panel */
-  @State private doricContext_: DoricContext | undefined = undefined
+  private doricContext_: DoricContext | undefined = undefined
   /** Tracked rendered dimensions */
   private renderedWidth_: number = 0
   private renderedHeight_: number = 0
   /** Whether onShow has been called */
   private isShow_: boolean = false
+
+  /**
+   * The root node model for ArkUI rendering.
+   * Updated when DoricShaderPlugin.render() modifies the view tree.
+   */
+  @State private rootNodeModel_: DoricNodeModel = new DoricNodeModel()
+
+  /**
+   * Render version counter - ensures @State change detection for structural updates.
+   */
+  @State private renderVersion_: number = 0
 
   /**
    * Get the underlying DoricContext.
@@ -64,16 +83,64 @@ export struct DoricPanel {
   /**
    * Configure the panel with a script.
    * Aligned with iOS: - (void)config:(NSString *)script alias:(NSString *)alias extra:(NSString *)extra;
+   *
+   * Creates a DoricContext, sets up the rootNode's view (like iOS setupRootView),
+   * and registers the render callback for ArkUI updates.
    */
   config(script: string, alias: string, extra: string): void {
     // Teardown existing context if any
     if (this.doricContext_) {
+      this.doricContext_.onRenderCallback = undefined
       this.doricContext_.teardown()
     }
 
     this.doricContext_ = new DoricContext(script, alias, extra)
+
+    // Register render callback
+    this.doricContext_!.onRenderCallback = () => {
+      this.rootNodeModel_ = this.doricContext_!.getRootNodeModel()
+      this.renderVersion_++
+      hilog.debug(DOMAIN, TAG, 'Render callback: rootNodeModel updated, version=%{public}d',
+        this.renderVersion_)
+    }
+
+    // Set initial root node model
+    this.rootNodeModel_ = this.doricContext_!.getRootNodeModel()
+
     hilog.info(DOMAIN, TAG, 'DoricPanel configured with alias: %{public}s, contextId: %{public}s',
       alias, this.doricContext_!.contextId)
+  }
+
+  /**
+   * Handle click events from DoricNodeRenderer.
+   */
+  private handleNodeClick_(viewId: string, callbackId: string): void {
+    if (this.doricContext_ && !this.doricContext_!.destroyed) {
+      const rootNode = this.doricContext_!.rootNode
+      const viewNode = this.findViewNode_(rootNode, viewId)
+      if (viewNode !== undefined) {
+        viewNode.callJSResponse(callbackId)
+      }
+    }
+  }
+
+  /**
+   * Recursively find a view node by viewId.
+   */
+  private findViewNode_(node: DoricViewNode, viewId: string): DoricViewNode | undefined {
+    if (node.viewId === viewId) {
+      return node
+    }
+    if (node instanceof DoricGroupNode) {
+      const groupNode = node as DoricGroupNode
+      for (const child of groupNode.childNodes) {
+        const found = this.findViewNode_(child, viewId)
+        if (found !== undefined) {
+          return found
+        }
+      }
+    }
+    return undefined
   }
 
   aboutToAppear(): void {
@@ -91,6 +158,7 @@ export struct DoricPanel {
     }
     // Teardown context when panel is fully removed
     if (this.doricContext_) {
+      this.doricContext_!.onRenderCallback = undefined
       this.doricContext_!.teardown()
       this.doricContext_ = undefined
     }
@@ -112,10 +180,16 @@ export struct DoricPanel {
 
   build() {
     Stack() {
-      // Placeholder for Doric rendered content.
-      // In a full implementation, the JS bridge would drive native node creation
-      // via the nativeBridge callback. For now, this Stack serves as the root container
-      // where DoricContext's rootNode content will be rendered.
+      // Render the Doric view tree via DoricNodeRenderer
+      // Read renderVersion_ to ensure @State tracks changes
+      if (this.renderVersion_ >= 0 && this.rootNodeModel_.type.length > 0) {
+        DoricNodeRenderer({
+          model: this.rootNodeModel_,
+          onNodeClick: (viewId: string, callbackId: string) => {
+            this.handleNodeClick_(viewId, callbackId)
+          }
+        })
+      }
     }
     .width('100%')
     .height('100%')

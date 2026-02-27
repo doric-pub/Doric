@@ -28,6 +28,7 @@
  */
 import { DoricContext } from './DoricContext'
 import { DoricPromise } from './DoricPromise'
+import { DoricViewNodeFactory, DoricViewNodeFactoryFunc, DoricContextRef, DoricViewNode } from './DoricViewNode'
 import { hilog } from '@kit.PerformanceAnalysisKit'
 
 const TAG = 'DoricPlugin'
@@ -145,5 +146,21 @@ export class DoricRegistry {
    */
   acquireNativePlugin(name: string): DoricPluginFactory | undefined {
     return this.pluginFactories_.get(name)
+  }
+
+  /**
+   * Register a custom view node type.
+   * External Doric libraries can use this to register their own view node types
+   * that will be renderable in the Doric view tree.
+   *
+   * Aligned with iOS: - (void)registerViewNode:(Class)nodeClass withName:(NSString *)name;
+   * Aligned with Android: registry.registerViewNode(name, nodeClass)
+   *
+   * @param type - The node type name (e.g., "MyCustomView")
+   * @param factory - A factory function that creates the node given a context
+   */
+  registerViewNode(type: string, factory: DoricViewNodeFactoryFunc): void {
+    DoricViewNodeFactory.register(type, factory)
+    hilog.debug(DOMAIN, TAG, 'Registered ViewNode: %{public}s', type)
   }
 }

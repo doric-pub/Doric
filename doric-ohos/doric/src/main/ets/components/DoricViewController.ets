@@ -17,6 +17,9 @@
 import { DoricContext } from './DoricContext'
 import { DoricJSLoaderManager } from './DoricJSLoaderManager'
 import { DoricNavigatorDelegate, DoricNavBarDelegate, DoricStatusBarDelegate } from './DoricDelegates'
+import { DoricViewNode, DoricGroupNode } from './DoricViewNode'
+import { DoricNodeModel } from './DoricNodeModel'
+import { DoricNodeRenderer } from './DoricNodeRenderer'
 import { window } from '@kit.ArkUI'
 import { hilog } from '@kit.PerformanceAnalysisKit'
 
@@ -200,8 +203,14 @@ class DoricViewControllerState {
  * This is a full-page component that:
  *   1. Loads a JS bundle via DoricJSLoaderManager
  *   2. Shows loading / error states with mask
- *   3. Creates a DoricPanel and DoricContext
- *   4. Implements navigation, navbar, and statusbar controls
+ *   3. Creates a DoricContext
+ *   4. Uses DoricNodeRenderer to render the Doric view tree into ArkUI components
+ *   5. Implements navigation, navbar, and statusbar controls
+ *
+ * Rendering flow:
+ *   JS -> nativeBridge -> DoricShaderPlugin.render() -> DoricViewNode.blend()
+ *   -> Updates DoricNodeModel -> DoricContext.onRenderCallback
+ *   -> Updates rootNodeModel_ (@State) -> ArkUI re-renders DoricNodeRenderer
  *
  * Usage as a page:
  *   In your pages/*.ets file, create a DoricViewController with source/alias/extra params.
@@ -223,6 +232,22 @@ export struct DoricViewController {
   @State private statusBarHidden_: boolean = false
   @State private statusBarMode_: number = 1
   @State private contextReady_: boolean = false
+
+  /**
+   * The root node model for ArkUI rendering.
+   * This is the key bridge: when DoricShaderPlugin.render() updates the view tree,
+   * it triggers onRenderCallback which updates this @State model reference,
+   * causing ArkUI to re-render DoricNodeRenderer with the updated tree.
+   */
+  @State private rootNodeModel_: DoricNodeModel = new DoricNodeModel()
+
+  /**
+   * Render version counter. Since rootNodeModel_ may be the same object reference
+   * across renders (the @Observed model is updated in-place), this counter ensures
+   * that @State change is detected for the first render and structural changes.
+   * After the first render, @ObjectLink in DoricNodeRenderer handles fine-grained updates.
+   */
+  @State private renderVersion_: number = 0
 
   /** The DoricContext */
   private doricContext_: DoricContext | undefined = undefined
@@ -281,10 +306,59 @@ export struct DoricViewController {
     this.doricContext_!.navigator = this.navigatorDelegate_
     this.doricContext_!.navBar = this.navBarDelegate_
     this.doricContext_!.statusBar = this.statusBarDelegate_
+
+    // Register the render callback: when DoricShaderPlugin updates the view tree,
+    // this callback fires and updates the @State rootNodeModel_ to trigger ArkUI re-render.
+    this.doricContext_!.onRenderCallback = () => {
+      // Update the rootNodeModel_ reference and increment version
+      // to trigger @State change for ArkUI re-render
+      this.rootNodeModel_ = this.doricContext_!.getRootNodeModel()
+      this.renderVersion_++
+      this.syncStateFromDelegates_()
+      hilog.debug(DOMAIN, TAG, 'Render callback: rootNodeModel updated, version=%{public}d',
+        this.renderVersion_)
+    }
+
+    // Set initial root node model
+    this.rootNodeModel_ = this.doricContext_!.getRootNodeModel()
     this.contextReady_ = true
 
     hilog.info(DOMAIN, TAG, 'DoricContext created, id: %{public}s, alias: %{public}s',
       this.doricContext_!.contextId, this.alias)
+  }
+
+  /**
+   * Handle click events from DoricNodeRenderer.
+   * Routes the click back to the JS side via callJSResponse.
+   */
+  private handleNodeClick_(viewId: string, callbackId: string): void {
+    if (this.doricContext_ && !this.doricContext_!.destroyed) {
+      const rootNode = this.doricContext_!.rootNode
+      // Find the view node and call its JS response
+      const viewNode = this.findViewNode_(rootNode, viewId)
+      if (viewNode !== undefined) {
+        viewNode.callJSResponse(callbackId)
+      }
+    }
+  }
+
+  /**
+   * Recursively find a view node by viewId in the node tree.
+   */
+  private findViewNode_(node: DoricViewNode, viewId: string): DoricViewNode | undefined {
+    if (node.viewId === viewId) {
+      return node
+    }
+    if (node instanceof DoricGroupNode) {
+      const groupNode = node as DoricGroupNode
+      for (const child of groupNode.childNodes) {
+        const found = this.findViewNode_(child, viewId)
+        if (found !== undefined) {
+          return found
+        }
+      }
+    }
+    return undefined
   }
 
   /**
@@ -324,6 +398,7 @@ export struct DoricViewController {
       this.doricContext_!.onHidden()
     }
     if (this.doricContext_) {
+      this.doricContext_!.onRenderCallback = undefined
       this.doricContext_!.teardown()
       this.doricContext_ = undefined
       this.contextReady_ = false
@@ -426,25 +501,15 @@ export struct DoricViewController {
 
       // Content area
       Stack() {
-        // Doric content area
-        if (this.contextReady_) {
-          Stack()
-            .width('100%')
-            .height('100%')
-            .onAreaChange((_oldValue: Area, newValue: Area) => {
-              const newWidth = newValue.width as number
-              const newHeight = newValue.height as number
-              if (this.doricContext_ &&
-                (this.renderedWidth_ !== newWidth || this.renderedHeight_ !== newHeight)) {
-                this.renderedWidth_ = newWidth
-                this.renderedHeight_ = newHeight
-                this.doricContext_!.build(newWidth, newHeight)
-                if (!this.isShow_) {
-                  this.isShow_ = true
-                  this.doricContext_!.onShow()
-                }
-              }
-            })
+        // Doric content area - renders the view tree via DoricNodeRenderer
+        // Read renderVersion_ to ensure @State tracks changes
+        if (this.contextReady_ && this.renderVersion_ >= 0 && this.rootNodeModel_.type.length > 0) {
+          DoricNodeRenderer({
+            model: this.rootNodeModel_,
+            onNodeClick: (viewId: string, callbackId: string) => {
+              this.handleNodeClick_(viewId, callbackId)
+            }
+          })
         }
 
         // Mask layer: loading / error states
@@ -465,6 +530,20 @@ export struct DoricViewController {
       }
       .width('100%')
       .layoutWeight(1)
+      .onAreaChange((_oldValue: Area, newValue: Area) => {
+        const newWidth = newValue.width as number
+        const newHeight = newValue.height as number
+        if (this.doricContext_ &&
+          (this.renderedWidth_ !== newWidth || this.renderedHeight_ !== newHeight)) {
+          this.renderedWidth_ = newWidth
+          this.renderedHeight_ = newHeight
+          this.doricContext_!.build(newWidth, newHeight)
+          if (!this.isShow_) {
+            this.isShow_ = true
+            this.doricContext_!.onShow()
+          }
+        }
+      })
     }
     .width('100%')
     .height('100%')

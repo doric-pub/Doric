@@ -123,6 +123,7 @@ export class DoricShaderPlugin extends DoricNativePlugin {
       // First render: assign viewId to root and blend
       // Aligned with iOS: self.doricContext.rootNode.viewId = viewId; [self.doricContext.rootNode blend:props];
       rootNode.viewId = viewId
+      rootNode.nodeModel.viewId = viewId
       rootNode.blend(props)
       rootNode.requestLayout()
     } else {

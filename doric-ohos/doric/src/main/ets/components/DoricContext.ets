@@ -21,6 +21,7 @@ import {
 } from 'libdoric.so'
 import { DoricNavigatorDelegate, DoricNavBarDelegate, DoricStatusBarDelegate } from './DoricDelegates'
 import { DoricContextRef, DoricRootNode, DoricViewNode } from './DoricViewNode'
+import { DoricNodeModel } from './DoricNodeModel'
 import { hilog } from '@kit.PerformanceAnalysisKit'
 
 const TAG = 'DoricContext'
@@ -127,6 +128,16 @@ export class DoricContext implements DoricContextRef {
   rootNode: DoricRootNode
 
   /**
+   * Render callback - called when the view tree model has changed and
+   * ArkUI should re-render. This bridges the imperative render() call
+   * in DoricShaderPlugin to the declarative ArkUI component.
+   *
+   * DoricViewController/DoricPanel registers this callback to be notified
+   * when the DoricNodeModel tree is updated.
+   */
+  onRenderCallback: (() => void) | undefined = undefined
+
+  /**
    * Head-level nodes map (for popover, overlays, etc.).
    * Keyed by type name, then by viewId.
    * Aligned with iOS: @property(nonatomic, strong) NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, DoricViewNode *> *> *headNodes;
@@ -209,6 +220,26 @@ export class DoricContext implements DoricContextRef {
    */
   onEnvChanged(): void {
     this.callEntity('__onEnvChanged__')
+  }
+
+  /**
+   * Called by DoricRootNode.requestLayout() when the view tree model
+   * has been updated. Triggers the render callback so that ArkUI
+   * components re-render.
+   */
+  onRenderFinished(): void {
+    if (this.onRenderCallback) {
+      this.onRenderCallback()
+    }
+  }
+
+  /**
+   * Get the root node's model for ArkUI rendering.
+   * DoricViewController / DoricPanel uses this to obtain the model tree root
+   * and pass it to DoricNodeRenderer.
+   */
+  getRootNodeModel(): DoricNodeModel {
+    return this.rootNode.nodeModel
   }
 
   /**

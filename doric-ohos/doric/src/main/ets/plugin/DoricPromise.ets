@@ -14,28 +14,18 @@
  * limitations under the License.
  */
 
-/**
- * DoricPromise - Promise callback mechanism for Doric plugins.
- *
- * Aligned with iOS DoricPromise:
- *   - initWithContext:callbackId:
- *   - resolve:
- *   - reject:
- *
- * When a JS -> Native bridge call is made, a callbackId is passed.
- * The plugin calls resolve/reject on this promise, which in turn
- * invokes the JS side's jsCallResolve/jsCallReject to complete the async cycle.
- *
- * Note: This module intentionally avoids importing DoricContext to prevent
- * circular dependencies. It uses DoricContextRef interface instead.
- */
 import { invokeDoricMethod } from 'libdoric.so'
-import { DoricContextRef } from './DoricViewNode'
+import { DoricContextRef } from '../shader/DoricViewNode'
 import { hilog } from '@kit.PerformanceAnalysisKit'
 
 const TAG = 'DoricPromise'
 const DOMAIN = 0x8000
 
+/**
+ * DoricPromise - Promise callback mechanism for Doric plugins.
+ *
+ * Aligned with iOS DoricPromise.
+ */
 export class DoricPromise {
   private contextId_: string
   private callbackId_: string
@@ -43,11 +33,6 @@ export class DoricPromise {
 
   /**
    * Create a DoricPromise.
-   * Aligned with iOS: - (instancetype)initWithContext:(DoricContext *)context callbackId:(NSString *)callbackId;
-   *
-   * @param contextId - The context ID
-   * @param callbackId - The JS callback ID
-   * @param contextRef - Optional context reference for destroyed check
    */
   constructor(contextId: string, callbackId: string, contextRef?: DoricContextRef) {
     this.contextId_ = contextId
@@ -57,9 +42,6 @@ export class DoricPromise {
 
   /**
    * Resolve the promise, calling back to JS side.
-   * Aligned with iOS: - (void)resolve:(id)result;
-   *
-   * Invokes doric.jsCallResolve(contextId, callbackId, result)
    */
   resolve(result?: string): void {
     if (this.contextRef_ !== undefined && this.contextRef_.destroyed) {
@@ -78,9 +60,6 @@ export class DoricPromise {
 
   /**
    * Reject the promise, calling back to JS side with an error.
-   * Aligned with iOS: - (void)reject:(id)result;
-   *
-   * Invokes doric.jsCallReject(contextId, callbackId, result)
    */
   reject(result?: string): void {
     if (this.contextRef_ !== undefined && this.contextRef_.destroyed) {

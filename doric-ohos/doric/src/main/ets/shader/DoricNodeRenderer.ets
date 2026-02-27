@@ -14,28 +14,6 @@
  * limitations under the License.
  */
 
-/**
- * DoricNodeRenderer - Declarative ArkUI component that recursively renders
- * a DoricNodeModel tree into ArkUI components.
- *
- * This bridges Doric's imperative view tree model to ArkUI's declarative UI:
- *   - DoricShaderPlugin updates DoricNodeModel (data layer)
- *   - DoricNodeRenderer observes the model and renders ArkUI components (view layer)
- *
- * Rendering strategy:
- *   - "Root" / "Stack" -> Stack { ForEach(children) }
- *   - "VLayout"        -> Column { ForEach(children) }
- *   - "HLayout"        -> Row { ForEach(children) }
- *   - "Text"           -> Text(text)
- *   - "Image"          -> Image(url/res)
- *   - unknown          -> Stack (fallback)
- *
- * Each node type applies layout/appearance properties from the model.
- *
- * Aligned with:
- *   - iOS: DoricRootNode.setupRootView, DoricGroupNode.configChildNodes
- *   - Android: RootNode, GroupNode, ViewNode
- */
 import {
   DoricNodeModel,
   DoricTextConfigModel,
@@ -45,14 +23,11 @@ import {
 
 /**
  * Callback type for handling node click events.
- * The DoricViewController/DoricPanel provides this to route clicks back to JS.
  */
 export type DoricNodeClickHandler = (viewId: string, callbackId: string) => void
 
 /**
  * DoricNodeRenderer - Renders a single DoricNodeModel and its children recursively.
- *
- * Uses @ObjectLink to observe model changes for fine-grained reactivity.
  */
 @Component
 export struct DoricNodeRenderer {
@@ -60,7 +35,6 @@ export struct DoricNodeRenderer {
   onNodeClick?: DoricNodeClickHandler
 
   build() {
-    // Read renderVersion to trigger re-render when invalidate() is called
     if (this.model.renderVersion >= 0 && !this.model.hidden) {
       if (this.model.type === 'Root' || this.model.type === 'Stack') {
         this.buildStack()
@@ -73,20 +47,11 @@ export struct DoricNodeRenderer {
       } else if (this.model.type === 'Image') {
         this.buildImage()
       } else {
-        // Fallback: render as Stack container
         this.buildStack()
       }
     }
   }
 
-  // ===========================================================================
-  // Container builders
-  // ===========================================================================
-
-  /**
-   * Stack layout (absolute positioning of children).
-   * Aligned with iOS DoricStackNode -> DoricUIView with DoricStack layout type.
-   */
   @Builder
   buildStack() {
     Stack() {
@@ -133,10 +98,6 @@ export struct DoricNodeRenderer {
     })
   }
 
-  /**
-   * Vertical layout (children arranged top to bottom).
-   * Aligned with iOS DoricVLayoutNode.
-   */
   @Builder
   buildVLayout() {
     Column() {
@@ -183,10 +144,6 @@ export struct DoricNodeRenderer {
     })
   }
 
-  /**
-   * Horizontal layout (children arranged left to right).
-   * Aligned with iOS DoricHLayoutNode.
-   */
   @Builder
   buildHLayout() {
     Row() {
@@ -233,14 +190,6 @@ export struct DoricNodeRenderer {
     })
   }
 
-  // ===========================================================================
-  // Leaf node builders
-  // ===========================================================================
-
-  /**
-   * Text node.
-   * Aligned with iOS DoricTextNode.
-   */
   @Builder
   buildText() {
     Text(this.getTextConfig().text)
@@ -295,10 +244,6 @@ export struct DoricNodeRenderer {
       })
   }
 
-  /**
-   * Image node.
-   * Aligned with iOS DoricImageNode.
-   */
   @Builder
   buildImage() {
     Image(this.computeImageSource())
@@ -336,30 +281,17 @@ export struct DoricNodeRenderer {
       })
   }
 
-  // ===========================================================================
-  // Helpers
-  // ===========================================================================
-
-  /**
-   * Compute width based on layoutConfig.widthSpec.
-   * Aligned with iOS DoricLayoutSpec.
-   */
   private computeWidth(): Length | undefined {
     const spec = this.model.layoutConfig.widthSpec
     if (spec === DoricLayoutSpec.MOST) {
       return '100%'
     } else if (spec === DoricLayoutSpec.FIT) {
-      // Let ArkUI determine size from content
       return undefined
     } else {
-      // JUST - fixed pixel value
       return this.model.width > 0 ? this.model.width : undefined
     }
   }
 
-  /**
-   * Compute height based on layoutConfig.heightSpec.
-   */
   private computeHeight(): Length | undefined {
     const spec = this.model.layoutConfig.heightSpec
     if (spec === DoricLayoutSpec.MOST) {
@@ -371,32 +303,17 @@ export struct DoricNodeRenderer {
     }
   }
 
-  // ===========================================================================
-  // Type-specific config accessors
-  // ===========================================================================
-
-  /** Default text config used when model.textConfig is undefined */
   private static readonly DEFAULT_TEXT_CONFIG: DoricTextConfigModel = new DoricTextConfigModel()
-  /** Default image config used when model.imageConfig is undefined */
   private static readonly DEFAULT_IMAGE_CONFIG: DoricImageConfigModel = new DoricImageConfigModel()
 
-  /**
-   * Get the text config, falling back to a default if not set.
-   */
   private getTextConfig(): DoricTextConfigModel {
     return this.model.textConfig !== undefined ? this.model.textConfig : DoricNodeRenderer.DEFAULT_TEXT_CONFIG
   }
 
-  /**
-   * Get the image config, falling back to a default if not set.
-   */
   private getImageConfig(): DoricImageConfigModel {
     return this.model.imageConfig !== undefined ? this.model.imageConfig : DoricNodeRenderer.DEFAULT_IMAGE_CONFIG
   }
 
-  /**
-   * Compute text alignment.
-   */
   private computeTextAlign(): TextAlign {
     const tc = this.getTextConfig()
     switch (tc.textAlignment) {
@@ -409,9 +326,6 @@ export struct DoricNodeRenderer {
     }
   }
 
-  /**
-   * Compute image source from the image config properties.
-   */
   private computeImageSource(): string | Resource {
     const ic = this.getImageConfig()
     if (ic.imageUrl.length > 0) {
@@ -426,10 +340,6 @@ export struct DoricNodeRenderer {
     return ''
   }
 
-  /**
-   * Compute image object fit from scaleType.
-   * Aligned with iOS UIViewContentMode / Doric ScaleType.
-   */
   private computeImageFit(): ImageFit {
     const ic = this.getImageConfig()
     switch (ic.scaleType) {

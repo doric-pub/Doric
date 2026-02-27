@@ -15,27 +15,7 @@
  */
 
 /**
- * DoricNodeModel - Observable data model that bridges the Doric imperative
- * view node tree to ArkUI's declarative rendering system.
- *
- * In iOS/Android, each DoricViewNode holds a native view (UIView / android.view.View)
- * and can imperatively add/remove/update it. ArkUI is declarative, so we cannot
- * imperatively create or attach components.
- *
- * This @Observed model acts as the reactive data source: when DoricShaderPlugin.render()
- * updates model properties, ArkUI detects the changes and re-renders automatically.
- *
- * Model hierarchy mirrors the Doric view node tree:
- *   DoricNodeModel (root)
- *     ├── DoricNodeModel (child: Stack)
- *     │   ├── DoricNodeModel (child: Text)
- *     │   └── DoricNodeModel (child: Image)
- *     └── DoricNodeModel (child: VLayout)
- *         └── ...
- */
-
-/**
- * Layout specification enum, aligned with iOS DoricLayoutSpec / doric-js LayoutSpec.
+ * Layout specification enum, aligned with iOS DoricLayoutSpec.
  */
 export enum DoricLayoutSpec {
   JUST = 0,       // Fixed size
@@ -44,8 +24,7 @@ export enum DoricLayoutSpec {
 }
 
 /**
- * Gravity constants for alignment, aligned with iOS DoricGravity / doric-js Gravity.
- * Using a namespace with constants instead of enum to support bitwise operations.
+ * Gravity constants for alignment.
  */
 export class DoricGravity {
   static readonly SPECIFIED: number = 1
@@ -63,7 +42,7 @@ export class DoricGravity {
 }
 
 /**
- * Layout configuration model, aligned with iOS DoricLayout / doric-js layoutConfig.
+ * Layout configuration model.
  */
 @Observed
 export class DoricLayoutConfigModel {
@@ -104,7 +83,6 @@ export class DoricShadowModel {
 
 /**
  * Corners configuration model.
- * When all corners are equal, use `radius`. Otherwise use individual values.
  */
 @Observed
 export class DoricCornersModel {
@@ -129,10 +107,6 @@ export class DoricPaddingModel {
 
 /**
  * DoricTextConfigModel - Type-specific properties for Text nodes.
- * Separated from DoricNodeModel to keep the base model clean.
- * Only Text nodes will have this config instantiated.
- *
- * Aligned with iOS DoricTextNode properties.
  */
 @Observed
 export class DoricTextConfigModel {
@@ -148,10 +122,6 @@ export class DoricTextConfigModel {
 
 /**
  * DoricImageConfigModel - Type-specific properties for Image nodes.
- * Separated from DoricNodeModel to keep the base model clean.
- * Only Image nodes will have this config instantiated.
- *
- * Aligned with iOS DoricImageNode properties.
  */
 @Observed
 export class DoricImageConfigModel {
@@ -166,52 +136,28 @@ export class DoricImageConfigModel {
 
 /**
  * DoricNodeModel - The observable model for a single Doric view node.
- *
- * This is decorated with @Observed so that any property change triggers
- * ArkUI re-rendering of the components that reference this model.
- *
- * Contains only common/generic properties shared by all node types.
- * Type-specific properties are stored in optional sub-models:
- *   - textConfig: DoricTextConfigModel (for Text nodes)
- *   - imageConfig: DoricImageConfigModel (for Image nodes)
- *
- * Aligned with iOS DoricViewNode properties:
- *   - width, height, x, y (position)
- *   - backgroundColor, alpha, hidden
- *   - border, corners, shadow
- *   - padding
- *   - layoutConfig
- *   - onClick callback id
- *   - transform properties (translationX/Y, scaleX/Y, rotation)
  */
 @Observed
 export class DoricNodeModel {
-  /** Unique view ID from JS side */
   viewId: string = ''
-  /** Node type: "Root", "Stack", "VLayout", "HLayout", "Text", "Image", etc. */
   type: string = ''
 
-  // ---- Basic layout properties (aligned with iOS DoricLayout) ----
   width: number = 0
   height: number = 0
   x: number = 0
   y: number = 0
 
-  // ---- Appearance ----
   backgroundColor: string = '#00000000'
   alpha: number = 1.0
   hidden: boolean = false
 
-  // ---- Layout config (aligned with iOS layoutConfig / doric-js LayoutConfig) ----
   layoutConfig: DoricLayoutConfigModel = new DoricLayoutConfigModel()
 
-  // ---- Decorations ----
   border: DoricBorderModel = new DoricBorderModel()
   corners: DoricCornersModel = new DoricCornersModel()
   shadow: DoricShadowModel = new DoricShadowModel()
   padding: DoricPaddingModel = new DoricPaddingModel()
 
-  // ---- Transform ----
   translationX: number = 0
   translationY: number = 0
   scaleX: number = 1
@@ -220,31 +166,19 @@ export class DoricNodeModel {
   pivotX: number = 0.5
   pivotY: number = 0.5
 
-  // ---- Click callback ----
   onClickId: string = ''
 
-  // ---- Type-specific config (only set for corresponding node types) ----
-  /** Text node config - only instantiated for Text type nodes */
   textConfig: DoricTextConfigModel | undefined = undefined
-  /** Image node config - only instantiated for Image type nodes */
   imageConfig: DoricImageConfigModel | undefined = undefined
 
-  // ---- Container children (for Stack/VLayout/HLayout/Root) ----
   children: DoricNodeModel[] = []
 
-  // ---- Version counter for forcing re-render ----
   renderVersion: number = 0
 
-  /**
-   * Mark that a re-render is needed.
-   */
   invalidate(): void {
     this.renderVersion++
   }
 
-  /**
-   * Ensure textConfig is initialized (lazy creation for Text nodes).
-   */
   ensureTextConfig(): DoricTextConfigModel {
     if (this.textConfig === undefined) {
       this.textConfig = new DoricTextConfigModel()
@@ -252,9 +186,6 @@ export class DoricNodeModel {
     return this.textConfig
   }
 
-  /**
-   * Ensure imageConfig is initialized (lazy creation for Image nodes).
-   */
   ensureImageConfig(): DoricImageConfigModel {
     if (this.imageConfig === undefined) {
       this.imageConfig = new DoricImageConfigModel()
@@ -265,10 +196,8 @@ export class DoricNodeModel {
 
 /**
  * Helper: Convert a Doric color number (ARGB int32) to ArkUI hex string (#AARRGGBB).
- * Aligned with iOS DoricColor() macro.
  */
 export function doricColorToHex(color: number): string {
-  // Doric color is an ARGB 32-bit integer
   const unsigned = color >>> 0
   return '#' + unsigned.toString(16).padStart(8, '0')
 }

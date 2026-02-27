@@ -15,36 +15,26 @@
  */
 
 import { DoricContext } from './DoricContext'
-import { DoricJSLoaderManager } from './DoricJSLoaderManager'
-import { DoricNavigatorDelegate, DoricNavBarDelegate, DoricStatusBarDelegate } from './DoricDelegates'
-import { DoricViewNode, DoricGroupNode } from './DoricViewNode'
-import { DoricNodeModel } from './DoricNodeModel'
-import { DoricNodeRenderer } from './DoricNodeRenderer'
+import { DoricJSLoaderManager } from './loader/DoricJSLoaderManager'
+import { DoricNavigatorDelegate, DoricNavBarDelegate, DoricStatusBarDelegate } from './utils/DoricDelegates'
+import { DoricViewNode, DoricGroupNode } from './shader/DoricViewNode'
+import { DoricNodeModel } from './shader/DoricNodeModel'
+import { DoricNodeRenderer } from './shader/DoricNodeRenderer'
 import { window } from '@kit.ArkUI'
 import { hilog } from '@kit.PerformanceAnalysisKit'
 
 const TAG = 'DoricVC'
 const DOMAIN = 0x8000
 
-/**
- * Loading state enum for the ViewController.
- */
 enum DoricVCState {
   LOADING,
   SUCCESS,
   ERROR
 }
 
-/**
- * Navigator delegate implementation class.
- * Aligned with iOS DoricViewController's DoricNavigatorDelegate implementation.
- */
 class DoricVCNavigatorDelegate implements DoricNavigatorDelegate {
   doric_navigator_push(source: string, alias: string, _animated: boolean, extra: string): void {
     hilog.info(DOMAIN, TAG, 'navigator_push: %{public}s', source)
-    // Use dynamic import to push page. In HarmonyOS, navigation between pages
-    // can be done via Navigation component or router. Here we store params
-    // for the next page to pick up.
     import('@ohos.router').then((routerModule) => {
       const params = new DoricPageParams()
       params.source = source
@@ -79,19 +69,12 @@ class DoricVCNavigatorDelegate implements DoricNavigatorDelegate {
   }
 }
 
-/**
- * Params class for DoricPage navigation.
- */
 class DoricPageParams {
   source: string = ''
   alias: string = ''
   extra: string = ''
 }
 
-/**
- * NavBar delegate implementation class.
- * Aligned with iOS DoricViewController's DoricNavBarDelegate implementation.
- */
 class DoricVCNavBarDelegate implements DoricNavBarDelegate {
   private vc_: DoricViewControllerState
 
@@ -121,24 +104,17 @@ class DoricVCNavBarDelegate implements DoricNavBarDelegate {
 
   doric_navBar_setLeft(_view: string): void {
     hilog.info(DOMAIN, TAG, 'navBar_setLeft (view config received)')
-    // TODO: Render custom left view from JS config
   }
 
   doric_navBar_setRight(_view: string): void {
     hilog.info(DOMAIN, TAG, 'navBar_setRight (view config received)')
-    // TODO: Render custom right view from JS config
   }
 
   doric_navBar_setCenter(_view: string): void {
     hilog.info(DOMAIN, TAG, 'navBar_setCenter (view config received)')
-    // TODO: Render custom center view from JS config
   }
 }
 
-/**
- * StatusBar delegate implementation class.
- * Aligned with iOS DoricViewController's DoricStatusBarDelegate implementation.
- */
 class DoricVCStatusBarDelegate implements DoricStatusBarDelegate {
   private vc_: DoricViewControllerState
 
@@ -179,10 +155,6 @@ class DoricVCStatusBarDelegate implements DoricStatusBarDelegate {
   }
 }
 
-/**
- * Shared mutable state for the DoricViewController and its delegates.
- * This allows delegate classes to modify the component's @State variables.
- */
 class DoricViewControllerState {
   navBarHidden: boolean = false
   navBarTitle: string = ''
@@ -192,39 +164,12 @@ class DoricViewControllerState {
   windowStage: window.WindowStage | undefined = undefined
 }
 
-/**
- * DoricViewController
- *
- * Aligned with iOS DoricViewController which implements:
- *   - DoricNavigatorDelegate (push/pop/popSelf/popToRoot)
- *   - DoricNavBarDelegate (title/backgroundColor/hidden/left/right/center)
- *   - DoricStatusBarDelegate (hidden/mode)
- *
- * This is a full-page component that:
- *   1. Loads a JS bundle via DoricJSLoaderManager
- *   2. Shows loading / error states with mask
- *   3. Creates a DoricContext
- *   4. Uses DoricNodeRenderer to render the Doric view tree into ArkUI components
- *   5. Implements navigation, navbar, and statusbar controls
- *
- * Rendering flow:
- *   JS -> nativeBridge -> DoricShaderPlugin.render() -> DoricViewNode.blend()
- *   -> Updates DoricNodeModel -> DoricContext.onRenderCallback
- *   -> Updates rootNodeModel_ (@State) -> ArkUI re-renders DoricNodeRenderer
- *
- * Usage as a page:
- *   In your pages/*.ets file, create a DoricViewController with source/alias/extra params.
- */
 @Component
 export struct DoricViewController {
-  /** JS bundle source (URL, rawfile path, or _internal_:// scheme) */
   @Prop source: string = ''
-  /** Alias name for the context */
   @Prop alias: string = ''
-  /** Extra initialization data (JSON string) */
   @Prop extra: string = ''
 
-  /** Internal state */
   @State private state_: DoricVCState = DoricVCState.LOADING
   @State private navBarHidden_: boolean = false
   @State private navBarTitle_: string = ''
@@ -233,55 +178,29 @@ export struct DoricViewController {
   @State private statusBarMode_: number = 1
   @State private contextReady_: boolean = false
 
-  /**
-   * The root node model for ArkUI rendering.
-   * This is the key bridge: when DoricShaderPlugin.render() updates the view tree,
-   * it triggers onRenderCallback which updates this @State model reference,
-   * causing ArkUI to re-render DoricNodeRenderer with the updated tree.
-   */
   @State private rootNodeModel_: DoricNodeModel = new DoricNodeModel()
 
-  /**
-   * Render version counter. Since rootNodeModel_ may be the same object reference
-   * across renders (the @Observed model is updated in-place), this counter ensures
-   * that @State change is detected for the first render and structural changes.
-   * After the first render, @ObjectLink in DoricNodeRenderer handles fine-grained updates.
-   */
   @State private renderVersion_: number = 0
 
-  /** The DoricContext */
   private doricContext_: DoricContext | undefined = undefined
-  /** Tracked rendered size */
   private renderedWidth_: number = 0
   private renderedHeight_: number = 0
   private isShow_: boolean = false
 
-  /** Shared state object for delegate classes */
   private vcState_: DoricViewControllerState = new DoricViewControllerState()
 
-  /** Delegate instances */
   private navigatorDelegate_: DoricVCNavigatorDelegate = new DoricVCNavigatorDelegate()
   private navBarDelegate_: DoricVCNavBarDelegate = new DoricVCNavBarDelegate(this.vcState_)
   private statusBarDelegate_: DoricVCStatusBarDelegate = new DoricVCStatusBarDelegate(this.vcState_)
 
-  /** Custom loading/error builder slots */
   @BuilderParam loadingBuilder?: () => void
   @BuilderParam errorBuilder?: () => void
 
-  // ======================================================================
-  // JS Bundle loading - aligned with iOS loadJSBundle
-  // ======================================================================
-
-  /**
-   * Load the JS bundle via DoricJSLoaderManager.
-   * Aligned with iOS: - (void)loadJSBundle;
-   */
   private loadJSBundle_(): void {
     this.state_ = DoricVCState.LOADING
     hilog.info(DOMAIN, TAG, 'Loading JS bundle: %{public}s', this.source)
 
     DoricJSLoaderManager.getInstance().request(this.source).then((script: string) => {
-      // Success - create context
       this.configPanel_(script)
       this.state_ = DoricVCState.SUCCESS
     }).catch((e: Error) => {
@@ -291,27 +210,17 @@ export struct DoricViewController {
     })
   }
 
-  /**
-   * Configure the DoricContext after successful loading.
-   * Aligned with iOS DoricViewController.loadJSBundle success path.
-   */
   private configPanel_(script: string): void {
-    // Teardown previous context
     if (this.doricContext_) {
       this.doricContext_!.teardown()
     }
 
     this.doricContext_ = new DoricContext(script, this.alias, this.extra)
-    // Bind delegates (aligned with iOS: self.doricPanel.doricContext.navigator = self)
     this.doricContext_!.navigator = this.navigatorDelegate_
     this.doricContext_!.navBar = this.navBarDelegate_
     this.doricContext_!.statusBar = this.statusBarDelegate_
 
-    // Register the render callback: when DoricShaderPlugin updates the view tree,
-    // this callback fires and updates the @State rootNodeModel_ to trigger ArkUI re-render.
     this.doricContext_!.onRenderCallback = () => {
-      // Update the rootNodeModel_ reference and increment version
-      // to trigger @State change for ArkUI re-render
       this.rootNodeModel_ = this.doricContext_!.getRootNodeModel()
       this.renderVersion_++
       this.syncStateFromDelegates_()
@@ -319,7 +228,6 @@ export struct DoricViewController {
         this.renderVersion_)
     }
 
-    // Set initial root node model
     this.rootNodeModel_ = this.doricContext_!.getRootNodeModel()
     this.contextReady_ = true
 
@@ -327,14 +235,9 @@ export struct DoricViewController {
       this.doricContext_!.contextId, this.alias)
   }
 
-  /**
-   * Handle click events from DoricNodeRenderer.
-   * Routes the click back to the JS side via callJSResponse.
-   */
   private handleNodeClick_(viewId: string, callbackId: string): void {
     if (this.doricContext_ && !this.doricContext_!.destroyed) {
       const rootNode = this.doricContext_!.rootNode
-      // Find the view node and call its JS response
       const viewNode = this.findViewNode_(rootNode, viewId)
       if (viewNode !== undefined) {
         viewNode.callJSResponse(callbackId)
@@ -342,9 +245,6 @@ export struct DoricViewController {
     }
   }
 
-  /**
-   * Recursively find a view node by viewId in the node tree.
-   */
   private findViewNode_(node: DoricViewNode, viewId: string): DoricViewNode | undefined {
     if (node.viewId === viewId) {
       return node
@@ -361,9 +261,6 @@ export struct DoricViewController {
     return undefined
   }
 
-  /**
-   * Sync shared state back to @State properties for UI update.
-   */
   private syncStateFromDelegates_(): void {
     if (this.navBarHidden_ !== this.vcState_.navBarHidden) {
       this.navBarHidden_ = this.vcState_.navBarHidden
@@ -381,10 +278,6 @@ export struct DoricViewController {
       this.statusBarMode_ = this.vcState_.statusBarMode
     }
   }
-
-  // ======================================================================
-  // Lifecycle
-  // ======================================================================
 
   aboutToAppear(): void {
     hilog.info(DOMAIN, TAG, 'aboutToAppear, source: %{public}s', this.source)
@@ -419,10 +312,6 @@ export struct DoricViewController {
       this.doricContext_!.onHidden()
     }
   }
-
-  // ======================================================================
-  // UI Build
-  // ======================================================================
 
   @Builder
   defaultLoadingBuilder() {
@@ -466,10 +355,8 @@ export struct DoricViewController {
 
   build() {
     Column() {
-      // NavBar - aligned with iOS navigationBar
       if (!this.navBarHidden_) {
         Row() {
-          // Back button
           Image($r('sys.media.ohos_ic_public_arrow_left'))
             .width(24)
             .height(24)
@@ -480,14 +367,12 @@ export struct DoricViewController {
               })
             })
 
-          // Title
           Text(this.navBarTitle_)
             .fontSize(18)
             .fontWeight(FontWeight.Medium)
             .layoutWeight(1)
             .textAlign(TextAlign.Center)
 
-          // Placeholder for right side (symmetry)
           Row()
             .width(24)
             .height(24)
@@ -499,10 +384,7 @@ export struct DoricViewController {
         .alignItems(VerticalAlign.Center)
       }
 
-      // Content area
       Stack() {
-        // Doric content area - renders the view tree via DoricNodeRenderer
-        // Read renderVersion_ to ensure @State tracks changes
         if (this.contextReady_ && this.renderVersion_ >= 0 && this.rootNodeModel_.type.length > 0) {
           DoricNodeRenderer({
             model: this.rootNodeModel_,
@@ -512,8 +394,6 @@ export struct DoricViewController {
           })
         }
 
-        // Mask layer: loading / error states
-        // Aligned with iOS maskView behavior
         if (this.state_ === DoricVCState.LOADING) {
           if (this.loadingBuilder) {
             this.loadingBuilder()

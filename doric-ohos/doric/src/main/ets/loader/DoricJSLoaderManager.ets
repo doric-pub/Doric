@@ -24,10 +24,6 @@ const DOMAIN = 0x8000
 
 /**
  * DoricLoaderProtocol
- *
- * Aligned with iOS DoricLoaderProtocol:
- *   - filter: determine whether this loader can handle the source
- *   - request: load the JS bundle string
  */
 export interface DoricLoaderProtocol {
   filter(source: string): boolean
@@ -37,8 +33,6 @@ export interface DoricLoaderProtocol {
 
 /**
  * DoricRawFileJSLoader - Loads JS bundles from rawfile assets.
- *
- * Aligned with iOS DoricMainBundleJSLoader.
  */
 export class DoricRawFileJSLoader implements DoricLoaderProtocol {
   private resMgr: resourceManager.ResourceManager
@@ -48,7 +42,6 @@ export class DoricRawFileJSLoader implements DoricLoaderProtocol {
   }
 
   filter(source: string): boolean {
-    // Load from rawfile if source has no protocol prefix or starts with "assets://"
     return !source.includes('://') || source.startsWith('assets://')
   }
 
@@ -57,11 +50,9 @@ export class DoricRawFileJSLoader implements DoricLoaderProtocol {
     if (rawPath.startsWith('assets://')) {
       rawPath = rawPath.substring('assets://'.length)
     }
-    // Ensure .js extension
     if (!rawPath.endsWith('.js')) {
       rawPath = rawPath + '.js'
     }
-    // Try rawfile/ prefix path
     const filePath = `src/${rawPath}`
 
     try {
@@ -71,7 +62,6 @@ export class DoricRawFileJSLoader implements DoricLoaderProtocol {
       hilog.info(DOMAIN, TAG, 'Loaded rawfile: %{public}s (%{public}d bytes)', filePath, content.length)
       return content
     } catch (e) {
-      // Fallback: try without src/ prefix
       try {
         const data = this.resMgr.getRawFileContentSync(rawPath)
         const decoder = new util.TextDecoder('utf-8')
@@ -89,8 +79,6 @@ export class DoricRawFileJSLoader implements DoricLoaderProtocol {
 
 /**
  * DoricHttpJSLoader - Loads JS bundles from HTTP/HTTPS URLs.
- *
- * Aligned with iOS DoricHttpJSLoader.
  */
 export class DoricHttpJSLoader implements DoricLoaderProtocol {
   filter(source: string): boolean {
@@ -119,10 +107,6 @@ export class DoricHttpJSLoader implements DoricLoaderProtocol {
 
 /**
  * DoricJSLoaderManager - Manages JS bundle loaders.
- *
- * Aligned with iOS DoricJSLoaderManager:
- *   - addJSLoader: register additional loaders
- *   - request: load JS bundle from the first matching loader
  */
 export class DoricJSLoaderManager {
   private static instance_: DoricJSLoaderManager | undefined = undefined
@@ -139,7 +123,6 @@ export class DoricJSLoaderManager {
    * Initialize default loaders with the given resource manager.
    */
   initDefaultLoaders(resMgr: resourceManager.ResourceManager): void {
-    // Only add defaults if no loaders registered yet
     if (this.loaders_.length === 0) {
       this.loaders_.push(new DoricRawFileJSLoader(resMgr))
       this.loaders_.push(new DoricHttpJSLoader())
@@ -148,7 +131,6 @@ export class DoricJSLoaderManager {
 
   /**
    * Add a custom JS loader.
-   * Aligned with iOS: - (void)addJSLoader:(id <DoricLoaderProtocol>)loader;
    */
   addJSLoader(loader: DoricLoaderProtocol): void {
     this.loaders_.push(loader)
@@ -156,12 +138,8 @@ export class DoricJSLoaderManager {
 
   /**
    * Request a JS bundle from the first matching loader.
-   * Aligned with iOS: - (DoricAsyncResult<NSString *> *)request:(NSString *)source;
-   *
-   * Supports _internal_:// scheme for internal class entry.
    */
   async request(source: string): Promise<string> {
-    // Handle _internal_:// scheme (aligned with iOS)
     if (source.startsWith('_internal_://')) {
       const url = source.replace('_internal_://', 'internal://')
       const params = new Map<string, string>()
@@ -185,7 +163,6 @@ export class DoricJSLoaderManager {
       }
     }
 
-    // Try each loader in order
     for (const loader of this.loaders_) {
       if (loader.filter(source)) {
         return await loader.request(source)

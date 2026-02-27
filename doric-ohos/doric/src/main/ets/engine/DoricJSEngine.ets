@@ -9,19 +9,19 @@ import {
   registerBridgeCallback
 } from 'libdoric.so'
 import { resourceManager } from '@kit.LocalizationKit';
-import { DoricJSLoaderManager } from './DoricJSLoaderManager'
-import { DoricBridgeExtension } from './DoricBridgeExtension'
+import { DoricJSLoaderManager } from '../loader/DoricJSLoaderManager'
+import { DoricBridgeExtension } from '../extension/DoricBridgeExtension'
 import { hilog } from '@kit.PerformanceAnalysisKit'
 
-const TAG = 'DoricEngine'
+const TAG = 'DoricJSEngine'
 const DOMAIN = 0x8000
 
 /**
- * DoricEngine - ArkTS wrapper for the native Doric JS Engine.
+ * DoricJSEngine - ArkTS wrapper for the native Doric JS Engine.
  *
  * Aligned with iOS DoricJSEngine interface.
  */
-export class DoricEngine {
+export class DoricJSEngine {
 
   /**
    * Initialize the Doric engine. Must be called once at app startup.
@@ -48,7 +48,7 @@ export class DoricEngine {
       }
     )
 
-    hilog.info(DOMAIN, TAG, 'DoricEngine initialized with bridge callback')
+    hilog.info(DOMAIN, TAG, 'DoricJSEngine initialized with bridge callback')
   }
 
   /**
@@ -98,12 +98,4 @@ export class DoricEngine {
   static teardown(): void {
     teardownDoric()
   }
-}
-
-/**
- * Backward-compatible init function.
- * @param resMgr - ResourceManager instance from the caller's context
- */
-export function init(resMgr: resourceManager.ResourceManager): void {
-  DoricEngine.init(resMgr)
 }

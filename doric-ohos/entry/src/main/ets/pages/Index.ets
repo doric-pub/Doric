@@ -17,8 +17,8 @@ struct Index {
       // Aligned with iOS usage: [[DoricViewController alloc] initWithSource:alias:extra:]
       if (this.flag) {
         DoricViewController({
-          source: 'Counter',
-          alias: 'Counter',
+          source: 'HelloDoric',
+          alias: 'HelloDoric',
           extra: ''
         })
       }

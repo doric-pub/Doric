@@ -555,7 +555,7 @@ export class DoricTextNode extends DoricViewNode {
     const textConfig = this.nodeModel.ensureTextConfig()
     if (name === 'text') {
       textConfig.text = value as string
-    } else if (name === 'fontSize') {
+    } else if (name === 'textSize') {
       textConfig.fontSize = value as number
     } else if (name === 'textColor') {
       textConfig.fontColor = doricColorToHex(value as number)

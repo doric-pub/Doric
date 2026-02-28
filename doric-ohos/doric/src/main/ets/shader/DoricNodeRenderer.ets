@@ -249,6 +249,7 @@ export struct DoricNodeRenderer {
     Image(this.computeImageSource())
       .width(this.computeWidth())
       .height(this.computeHeight())
+      .fitOriginalSize(true)
       .objectFit(this.computeImageFit())
       .backgroundColor(this.model.backgroundColor)
       .opacity(this.model.alpha)

@@ -16,7 +16,7 @@
 
 import { DoricContext } from './DoricContext'
 import { DoricViewNode, DoricGroupNode } from './shader/DoricViewNode'
-import { DoricNodeModel } from './shader/DoricNodeModel'
+import { DoricNodeModel, DoricPoint } from './shader/DoricNodeModel'
 import { DoricNodeRenderer } from './shader/DoricNodeRenderer'
 import { hilog } from '@kit.PerformanceAnalysisKit'
 
@@ -73,6 +73,16 @@ export struct DoricPanel {
       const viewNode = this.findViewNode_(rootNode, viewId)
       if (viewNode !== undefined) {
         viewNode.callJSResponse(callbackId)
+      }
+    }
+  }
+
+  private handleNodeScroll_(viewId: string, callbackId: string, offset: DoricPoint): void {
+    if (this.doricContext_ && !this.doricContext_!.destroyed) {
+      const rootNode = this.doricContext_!.rootNode
+      const viewNode = this.findViewNode_(rootNode, viewId)
+      if (viewNode !== undefined) {
+        viewNode.callJSResponse(callbackId, offset)
       }
     }
   }
@@ -134,6 +144,9 @@ export struct DoricPanel {
           model: this.rootNodeModel_,
           onNodeClick: (viewId: string, callbackId: string) => {
             this.handleNodeClick_(viewId, callbackId)
+          },
+          onNodeScroll: (viewId: string, callbackId: string, offset: DoricPoint) => {
+            this.handleNodeScroll_(viewId, callbackId, offset)
           }
         })
       }

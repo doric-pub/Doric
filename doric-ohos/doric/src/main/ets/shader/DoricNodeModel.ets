@@ -135,6 +135,42 @@ export class DoricImageConfigModel {
 }
 
 /**
+ * DoricScrollChangeModel - Model for scroll changes.
+ */
+@Observed
+export class DoricScrollChangeModel {
+  offsetX: number = 0
+  offsetY: number = 0
+  animated: boolean = false
+  anchor: number = 0 // Using timestamp or counter to trigger change
+}
+
+/**
+/**
+ * DoricPoint - Represents a point with x and y coordinates.
+ */
+@Observed
+export class DoricPoint {
+  x: number = 0
+  y: number = 0
+}
+
+/**
+ * DoricScrollConfigModel - Type-specific properties for Scroller nodes.
+ */
+@Observed
+export class DoricScrollConfigModel {
+  contentViewId: string = ''
+  scrollable: boolean = true
+  bounces: boolean = true
+  scrollsToTop: boolean = true
+  onScrollFuncId: string = ''
+  onScrollEndFuncId: string = ''
+  contentOffset: DoricPoint = new DoricPoint()
+  scrollCommand: DoricScrollChangeModel | undefined = undefined
+}
+
+/**
  * DoricNodeModel - The observable model for a single Doric view node.
  */
 @Observed
@@ -170,6 +206,7 @@ export class DoricNodeModel {
 
   textConfig: DoricTextConfigModel | undefined = undefined
   imageConfig: DoricImageConfigModel | undefined = undefined
+  scrollConfig: DoricScrollConfigModel | undefined = undefined
 
   children: DoricNodeModel[] = []
 
@@ -191,6 +228,13 @@ export class DoricNodeModel {
       this.imageConfig = new DoricImageConfigModel()
     }
     return this.imageConfig
+  }
+
+  ensureScrollConfig(): DoricScrollConfigModel {
+    if (this.scrollConfig === undefined) {
+      this.scrollConfig = new DoricScrollConfigModel()
+    }
+    return this.scrollConfig
   }
 }
 

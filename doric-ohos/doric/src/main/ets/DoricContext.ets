@@ -116,7 +116,7 @@ export class DoricContext implements DoricContextRef {
     this.callEntity('__onCreate__')
   }
 
-  callEntity(method: string, ...args: (string | number | boolean | string[])[]): string {
+  callEntity(method: string, ...args: Object[]): string {
     if (this.destroyed) {
       return ''
     }

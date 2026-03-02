@@ -19,6 +19,7 @@ import { DoricPromise } from '../plugin/DoricPromise'
 import { DoricNativePlugin, DoricThreadMode } from '../plugin/DoricNativePlugin'
 import { DoricRegistry } from '../DoricRegistry'
 import { DoricShaderPlugin } from '../plugin/DoricShaderPlugin'
+import { DoricScrollerNode } from '../shader/DoricScrollerNode'
 import { hilog } from '@kit.PerformanceAnalysisKit'
 
 const TAG = 'DoricBridgeExtension'
@@ -44,6 +45,14 @@ export class DoricBridgeExtension {
 
     // Register ShaderPlugin (module name = "shader")
     registry.registerNativePlugin('shader', (context) => new DoricShaderPlugin(context))
+
+    // Register built-in view nodes
+    registry.registerViewNode('Scroller', (context) => {
+      const node = new DoricScrollerNode(context)
+      node.type = 'Scroller'
+      node.nodeModel.type = 'Scroller'
+      return node
+    })
 
     hilog.info(DOMAIN, TAG, 'Built-in plugins registered')
   }

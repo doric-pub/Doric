@@ -19,6 +19,8 @@ import {
   DoricTextConfigModel,
   DoricImageConfigModel,
   DoricLayoutSpec,
+  DoricScrollConfigModel,
+  DoricPoint,
 } from './DoricNodeModel'
 
 /**
@@ -27,12 +29,21 @@ import {
 export type DoricNodeClickHandler = (viewId: string, callbackId: string) => void
 
 /**
+ * Callback type for handling node scroll events.
+ */
+export type DoricNodeScrollHandler = (viewId: string, callbackId: string, offset: DoricPoint) => void
+
+/**
  * DoricNodeRenderer - Renders a single DoricNodeModel and its children recursively.
  */
 @Component
 export struct DoricNodeRenderer {
   @ObjectLink model: DoricNodeModel
   onNodeClick?: DoricNodeClickHandler
+  onNodeScroll?: DoricNodeScrollHandler
+  
+  private scroller: Scroller = new Scroller()
+  @State private lastScrollAnchor: number = 0
 
   build() {
     if (this.model.renderVersion >= 0 && !this.model.hidden) {
@@ -46,6 +57,8 @@ export struct DoricNodeRenderer {
         this.buildText()
       } else if (this.model.type === 'Image') {
         this.buildImage()
+      } else if (this.model.type === 'Scroller') {
+        this.buildScroller()
       } else {
         this.buildStack()
       }
@@ -56,7 +69,7 @@ export struct DoricNodeRenderer {
   buildStack() {
     Stack() {
       ForEach(this.model.children, (child: DoricNodeModel) => {
-        DoricNodeRenderer({ model: child, onNodeClick: this.onNodeClick })
+        DoricNodeRenderer({ model: child, onNodeClick: this.onNodeClick, onNodeScroll: this.onNodeScroll })
       }, (child: DoricNodeModel) => child.viewId)
     }
     .width(this.computeWidth())
@@ -102,7 +115,7 @@ export struct DoricNodeRenderer {
   buildVLayout() {
     Column() {
       ForEach(this.model.children, (child: DoricNodeModel) => {
-        DoricNodeRenderer({ model: child, onNodeClick: this.onNodeClick })
+        DoricNodeRenderer({ model: child, onNodeClick: this.onNodeClick, onNodeScroll: this.onNodeScroll })
       }, (child: DoricNodeModel) => child.viewId)
     }
     .width(this.computeWidth())
@@ -148,7 +161,7 @@ export struct DoricNodeRenderer {
   buildHLayout() {
     Row() {
       ForEach(this.model.children, (child: DoricNodeModel) => {
-        DoricNodeRenderer({ model: child, onNodeClick: this.onNodeClick })
+        DoricNodeRenderer({ model: child, onNodeClick: this.onNodeClick, onNodeScroll: this.onNodeScroll })
       }, (child: DoricNodeModel) => child.viewId)
     }
     .width(this.computeWidth())
@@ -282,6 +295,79 @@ export struct DoricNodeRenderer {
       })
   }
 
+  @Builder
+  buildScroller() {
+    Stack() {
+      Scroll(this.scroller) {
+        if (this.model.children.length > 0) {
+          DoricNodeRenderer({ model: this.model.children[0], onNodeClick: this.onNodeClick, onNodeScroll: this.onNodeScroll })
+        }
+      }
+      .width(this.computeWidth())
+      .height(this.computeHeight())
+      .scrollable(this.getScrollConfig().scrollable ? ScrollDirection.Vertical : ScrollDirection.None)
+      .scrollBar(BarState.Off)
+      .edgeEffect(this.getScrollConfig().bounces ? EdgeEffect.Spring : EdgeEffect.None)
+      .onScroll((_xOffset: number, _yOffset: number) => {
+        const offset = this.scroller.currentOffset()
+        const point = new DoricPoint()
+        point.x = offset.xOffset as number
+        point.y = offset.yOffset as number
+        this.getScrollConfig().contentOffset = point
+        const funcId = this.getScrollConfig().onScrollFuncId
+        if (funcId.length > 0 && this.onNodeScroll) {
+          this.onNodeScroll(this.model.viewId, funcId, point)
+        }
+      })
+      .onScrollStop(() => {
+        const offset = this.scroller.currentOffset()
+        const point = new DoricPoint()
+        point.x = offset.xOffset as number
+        point.y = offset.yOffset as number
+        this.getScrollConfig().contentOffset = point
+        const funcId = this.getScrollConfig().onScrollEndFuncId
+        if (funcId.length > 0 && this.onNodeScroll) {
+          this.onNodeScroll(this.model.viewId, funcId, point)
+        }
+      })
+      
+      // Invisible text to trigger command execution
+      if (this.getScrollConfig().scrollCommand !== undefined) {
+        Text('')
+          .visibility(Visibility.Hidden)
+          .onAppear(() => {
+            this.handleScrollCommand()
+          })
+          .key(`${this.getScrollConfig().scrollCommand!.anchor}`) // Key changes with anchor to re-render
+      }
+    }
+    .width(this.computeWidth())
+    .height(this.computeHeight())
+    .backgroundColor(this.model.backgroundColor)
+    .opacity(this.model.alpha)
+    .margin({
+      left: this.model.layoutConfig.marginLeft,
+      top: this.model.layoutConfig.marginTop,
+      right: this.model.layoutConfig.marginRight,
+      bottom: this.model.layoutConfig.marginBottom
+    })
+    .translate({ x: this.model.translationX, y: this.model.translationY })
+    .scale({ x: this.model.scaleX, y: this.model.scaleY, centerX: this.model.pivotX, centerY: this.model.pivotY })
+    .rotate({ angle: this.model.rotation * 180 })
+  }
+
+  private handleScrollCommand() {
+    const cmd = this.getScrollConfig().scrollCommand
+    if (cmd && cmd.anchor !== this.lastScrollAnchor) {
+      this.lastScrollAnchor = cmd.anchor
+      this.scroller.scrollTo({
+        xOffset: cmd.offsetX,
+        yOffset: cmd.offsetY,
+        animation: cmd.animated
+      })
+    }
+  }
+
   private computeWidth(): Length | undefined {
     const spec = this.model.layoutConfig.widthSpec
     if (spec === DoricLayoutSpec.MOST) {
@@ -306,6 +392,7 @@ export struct DoricNodeRenderer {
 
   private static readonly DEFAULT_TEXT_CONFIG: DoricTextConfigModel = new DoricTextConfigModel()
   private static readonly DEFAULT_IMAGE_CONFIG: DoricImageConfigModel = new DoricImageConfigModel()
+  private static readonly DEFAULT_SCROLL_CONFIG: DoricScrollConfigModel = new DoricScrollConfigModel()
 
   private getTextConfig(): DoricTextConfigModel {
     return this.model.textConfig !== undefined ? this.model.textConfig : DoricNodeRenderer.DEFAULT_TEXT_CONFIG
@@ -313,6 +400,10 @@ export struct DoricNodeRenderer {
 
   private getImageConfig(): DoricImageConfigModel {
     return this.model.imageConfig !== undefined ? this.model.imageConfig : DoricNodeRenderer.DEFAULT_IMAGE_CONFIG
+  }
+
+  private getScrollConfig(): DoricScrollConfigModel {
+    return this.model.scrollConfig !== undefined ? this.model.scrollConfig : DoricNodeRenderer.DEFAULT_SCROLL_CONFIG
   }
 
   private computeTextAlign(): TextAlign {

@@ -71,7 +71,7 @@ export class DoricJSEngine {
    * Invoke a method on the global "doric" JS object with arguments.
    * Aligned with iOS: - (JSValue *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args;
    */
-  static invokeDoricMethod(method: string, ...args: (string | number | boolean)[]): string {
+  static invokeDoricMethod(method: string, ...args: (string | number | boolean | Object)[]): string {
     return invokeDoricMethod(method, ...args)
   }
 
@@ -79,7 +79,7 @@ export class DoricJSEngine {
    * Call a method on a specific context entity.
    * Aligned with iOS: DoricContext.callEntity:withArgumentsArray:
    */
-  static callEntityMethod(contextId: string, method: string, ...args: (string | number | boolean | string[])[]): string {
+  static callEntityMethod(contextId: string, method: string, ...args: (string | number | boolean | string[] | Object)[]): string {
     return callEntityMethod(contextId, method, ...args)
   }
 

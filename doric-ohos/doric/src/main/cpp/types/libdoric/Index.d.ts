@@ -22,7 +22,7 @@ export const destroyContext: (contextId: string) => void;
  * Invoke a method on the global "doric" JS object.
  * Aligned with iOS: invokeDoricMethod:argumentsArray:
  */
-export const invokeDoricMethod: (method: string, ...args: (string | number | boolean)[]) => string;
+export const invokeDoricMethod: (method: string, ...args: (string | number | boolean | Object)[]) => string;
 
 /**
  * Set an environment value in the JS engine.
@@ -40,7 +40,7 @@ export const teardownDoric: () => void;
  * Call a method on a Doric context entity.
  * Aligned with iOS: DoricContext.callEntity:withArgumentsArray:
  */
-export const callEntityMethod: (contextId: string, method: string, ...args: (string | number | boolean | string[])[]) => string;
+export const callEntityMethod: (contextId: string, method: string, ...args: (string | number | boolean | string[] | Object)[]) => string;
 
 /**
  * Register the ArkTS callback function that receives bridge calls from JS.
